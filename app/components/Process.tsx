@@ -1,68 +1,73 @@
+import Reveal from "./Reveal";
+import RevealText from "./RevealText";
+
 type Step = {
-  number: "01" | "02" | "03" | "04";
+  no: string;
   title: string;
-  description: string;
+  body: string;
+  meta: string;
 };
 
 const steps: Step[] = [
   {
-    number: "01",
-    title: "Discovery",
-    description:
-      "We start by understanding your business, challenges, and goals through in-depth consultation.",
+    no: "01",
+    title: "Map the manual work",
+    body: "We sit with your real workflow and name every task a person is doing by hand: the chasing, the copy-paste, the late-night replies.",
+    meta: "week 1 · discovery",
   },
   {
-    number: "02",
-    title: "Strategy",
-    description:
-      "Our team develops a tailored solution strategy aligned with your objectives and budget.",
+    no: "02",
+    title: "Build the system",
+    body: "Working software, not decks. Chatbots, automations, and dashboards wired straight into the tools you already run.",
+    meta: "weeks 1 to 3 · build",
   },
   {
-    number: "03",
-    title: "Development",
-    description:
-      "We build and iterate on your solution using agile methodologies and best practices.",
+    no: "03",
+    title: "Automate and measure",
+    body: "It goes live and we watch the numbers: hours saved, leads captured, tickets closed without a person touching them.",
+    meta: "ongoing · live",
   },
   {
-    number: "04",
-    title: "Launch & Support",
-    description:
-      "We deploy your solution and provide ongoing support to ensure continued success.",
+    no: "04",
+    title: "Hand it over",
+    body: "Clear ownership and plain-language docs. No lock in, and no in-house engineering team required to keep it running.",
+    meta: "handoff · yours to keep",
   },
 ];
 
 export default function Process() {
   return (
-    <section id="process" className="py-32 px-6 lg:px-12 bg-gray-950">
-      <div className="max-w-[1400px] mx-auto">
-        <div className="max-w-3xl mb-20">
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight tracking-tight">
-            Our Process
+    <section id="process" className="relative overflow-hidden py-24 sm:py-32">
+      <div className="glow glow-cobalt right-[-10%] bottom-[10%] h-[420px] w-[420px]" aria-hidden />
+
+      <div className="relative z-10 mx-auto max-w-[1160px] px-5 sm:px-6">
+        <Reveal className="max-w-[52ch]">
+          <span className="eyebrow eyebrow-line">How it works</span>
+          <h2 className="mt-5 font-display text-[clamp(2rem,4.5vw,3.4rem)] text-white">
+            <RevealText>From manual to managed<br />in four moves.</RevealText>
           </h2>
-          <p className="text-xl text-gray-400 leading-relaxed">
-            A proven methodology that delivers results, from concept to launch and beyond.
-          </p>
-        </div>
+        </Reveal>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {steps.map((step, index) => (
-            <div key={step.number} className="relative">
-              {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-16 left-full w-full h-[2px] bg-gradient-to-r from-blue-500/30 to-transparent translate-y-1/2" />
-              )}
-
-              <div className="relative">
-                <div className="text-[120px] font-bold text-white/[0.02] leading-none mb-4">
-                  {step.number}
-                </div>
-                <div className="absolute top-0 left-0 text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
-                  {step.number}
-                </div>
-
-                <h3 className="text-2xl font-bold text-white mb-4 mt-12">{step.title}</h3>
-                <p className="text-gray-400 leading-relaxed">{step.description}</p>
+        <div className="mt-14 grid gap-px overflow-hidden rounded-[26px] border border-line bg-line sm:grid-cols-2">
+          {steps.map((step, i) => (
+            <Reveal
+              key={step.no}
+              delay={i % 2}
+              className="group relative bg-bg p-8 transition-colors duration-500 hover:bg-panel sm:p-10"
+            >
+              <div className="flex items-baseline justify-between">
+                <span className="font-display text-[clamp(2.4rem,5vw,3.6rem)] font-extrabold text-line-2 transition-all duration-500 group-hover:text-white">
+                  {step.no}
+                </span>
+                <span className="mono text-[11px] text-grey-3">{step.meta}</span>
               </div>
-            </div>
+              <h3 className="mt-5 text-[22px] font-semibold tracking-tight text-white">
+                {step.title}
+              </h3>
+              <p className="mt-3 max-w-[42ch] text-[15px] leading-relaxed text-grey-2">
+                {step.body}
+              </p>
+            </Reveal>
           ))}
         </div>
       </div>

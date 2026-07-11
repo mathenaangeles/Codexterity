@@ -1,0 +1,9 @@
+/* Inter variable font (SIL Open Font License) — bundled for design-sync
+   because the site's CSS references 'Inter' without shipping it. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./InterVariable.woff2") format("woff2");
+}

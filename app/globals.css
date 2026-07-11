@@ -1,83 +1,636 @@
 @import "tailwindcss";
 
+/* =========================================================================
+   Codexterity — design system  (v2)
+   Tokens from brand-book.html. Volt + Cobalt are accents, never fields.
+   Signature gradient travels the clean side of the wheel:
+   lime -> mint -> cyan -> cobalt (no muddy sRGB midpoint).
+   ========================================================================= */
+
+@theme {
+  --color-black: #000000;
+  --color-bg: #050506;
+  --color-bg-2: #0a0a0c;
+  --color-panel: #101013;
+  --color-panel-2: #16161a;
+  --color-line: #242429;
+  --color-line-2: #33333a;
+  --color-white: #ffffff;
+  --color-grey: #86868b;
+  --color-grey-2: #a6a6ac;
+  --color-grey-3: #5c5c62;
+  --color-paper: #f1efe9;
+  --color-paper-2: #e6e3da;
+  --color-ink: #0b0b0a;
+  --color-volt: #e6ff4b;
+  --color-volt-2: #d4ee2f;
+  --color-mint: #7cf3b0;
+  --color-aqua: #37d9d4;
+  --color-cobalt: #4b58ff;
+  --color-cobalt-2: #6f79ff;
+  --color-indigo: #6d4bff;
+
+  --font-display: var(--font-sora), "Garet", "Inter", sans-serif;
+  --font-body: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: var(--font-mono-jb), "JetBrains Mono", ui-monospace, monospace;
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 30px;
+
+  --ease-brand: cubic-bezier(0.16, 0.84, 0.28, 1);
+}
+
+:root {
+  --hair: rgba(255, 255, 255, 0.06);
+  --ease: cubic-bezier(0.16, 0.84, 0.28, 1);
+  /* Signature gradient — used sparingly, on one or two words / accents per view */
+  --grad-brand: linear-gradient(
+    100deg,
+    #e6ff4b 0%,
+    #b9f77a 20%,
+    #62eeb4 44%,
+    #37c8e0 68%,
+    #4b74ff 88%,
+    #4b58ff 100%
+  );
+  --grad-brand-soft: linear-gradient(100deg, #d6ff5e, #46e0c8 52%, #5b78ff);
+}
+
 @layer base {
-  :root {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: #050506;
+    color: #fff;
+    overflow-x: hidden;
+    letter-spacing: -0.011em;
+  }
+
+  ::selection {
+    background: var(--color-volt);
+    color: #000;
+  }
+
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-aqua);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 9px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #050506;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #242429;
+    border-radius: 6px;
+    border: 2px solid #050506;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #33333a;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ---------------------------------------------------------------- Type */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
 }
 
-html {
-  scroll-behavior: smooth;
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--color-grey);
+}
+.eyebrow-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.eyebrow-line::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: var(--color-aqua);
+  opacity: 0.7;
 }
 
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #000;
+.mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.01em;
+}
+
+.text-gradient {
+  background: var(--grad-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ---------------------------------------------------------------- Texture
+   Persistent, subtle. A global backdrop (fixed) carries grid + grain so
+   every section shares the same surface; sections add their own glows. */
+.backdrop-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  -webkit-mask-image: radial-gradient(ellipse 130% 100% at 50% 0%, #000 0%, rgba(0,0,0,0.4) 55%, transparent 90%);
+  mask-image: radial-gradient(ellipse 130% 100% at 50% 0%, #000 0%, rgba(0,0,0,0.4) 55%, transparent 90%);
+}
+.backdrop-grain {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Visible section grid — hex.tech/pricing style boxed texture for specific
+   sections. Use .section-grid on an absolutely-positioned layer inside a section. */
+.section-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+.section-grid-fade {
+  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 0%, transparent 80%);
+  mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 0%, transparent 80%);
+}
+/* dotted variant */
+.section-dots {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1.1px, transparent 1.1px);
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 0%, transparent 78%);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 0%, transparent 78%);
+}
+
+/* legacy aliases still referenced by a couple of sections */
+.grid-texture {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+.grid-fade {
+  -webkit-mask-image: radial-gradient(ellipse 80% 62% at 50% 42%, #000 0%, transparent 78%);
+  mask-image: radial-gradient(ellipse 80% 62% at 50% 42%, #000 0%, transparent 78%);
+}
+
+.glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(130px);
+  pointer-events: none;
+  z-index: 0;
+}
+.glow-volt {
+  background: radial-gradient(circle, rgba(230, 255, 75, 0.13) 0%, transparent 70%);
+}
+.glow-aqua {
+  background: radial-gradient(circle, rgba(55, 217, 212, 0.16) 0%, transparent 70%);
+}
+.glow-cobalt {
+  background: radial-gradient(circle, rgba(75, 88, 255, 0.2) 0%, transparent 70%);
+}
+.glow-indigo {
+  background: radial-gradient(circle, rgba(109, 75, 255, 0.22) 0%, transparent 70%);
+}
+
+/* ---------------------------------------------------------------- Buttons
+   Bespoke CTA: a label cell + a divided arrow cell, with a sheen sweep on
+   hover and the arrow advancing into its cell (hex.tech/pricing energy). */
+.cta {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  isolation: isolate;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease),
+    border-color 0.3s var(--ease), background 0.3s var(--ease);
+  will-change: transform;
+}
+.cta:active {
+  transform: scale(0.985);
+}
+.cta .cta-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.82rem 1.15rem;
+}
+.cta .cta-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  position: relative;
+}
+.cta .cta-arrow svg {
+  transition: transform 0.42s var(--ease);
+}
+.cta:hover .cta-arrow svg {
+  transform: translateX(4px);
+}
+/* sheen sweep */
+.cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+  transform: translateX(-130%);
+  transition: transform 0.7s var(--ease);
+}
+.cta:hover::before {
+  transform: translateX(130%);
+}
+
+.cta-primary {
+  background: var(--color-volt);
+  color: #0a0a08;
+  box-shadow: 0 10px 30px -16px rgba(230, 255, 75, 0.9);
+}
+.cta-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 44px -18px rgba(230, 255, 75, 0.95);
+}
+.cta-primary .cta-arrow {
+  border-left: 1px solid rgba(0, 0, 0, 0.22);
+}
+
+.cta-ghost {
+  background: rgba(255, 255, 255, 0.02);
   color: #fff;
-  overflow-x: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+.cta-ghost:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.05);
+}
+.cta-ghost .cta-arrow {
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
+}
+.cta-ghost::before {
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.12) 50%, transparent 70%);
 }
 
-::-webkit-scrollbar {
-  width: 10px;
+/* Simple pill button kept for small/secondary uses */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  border-radius: 11px;
+  padding: 0.7rem 1.2rem;
+  cursor: pointer;
+  transition: transform 0.35s var(--ease), background 0.3s var(--ease),
+    border-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+.btn svg {
+  transition: transform 0.4s var(--ease);
+}
+.btn:hover svg.arrow {
+  transform: translateX(3px);
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn-primary {
+  background: var(--color-volt);
+  color: #0a0a08;
+  box-shadow: 0 8px 24px -14px rgba(230, 255, 75, 0.8);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  background: #f0ff6e;
+}
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.02);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+.btn-ghost:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
-::-webkit-scrollbar-track {
-  background: #0a0a0a;
+/* ---------------------------------------------------------------- Surfaces */
+.panel {
+  background: linear-gradient(180deg, #101013 0%, #0b0b0d 100%);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+}
+.hairline {
+  border: 1px solid var(--hair);
 }
 
-::-webkit-scrollbar-thumb {
-  background: #2563eb;
-  border-radius: 5px;
+/* Status / data badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  padding: 0.42rem 0.85rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-line);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--color-grey-2);
+}
+.badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #1d4ed8;
+/* Chips — selected fills Volt */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0.58rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-line);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--color-grey-2);
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+  user-select: none;
+}
+.chip:hover {
+  border-color: var(--color-line-2);
+  color: #fff;
+  transform: translateY(-1px);
+}
+.chip[data-active="true"] {
+  background: var(--color-volt);
+  border-color: var(--color-volt);
+  color: #0a0a08;
+  font-weight: 600;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
+/* Inputs — focus uses aqua so it reads on dark better than volt */
+.field {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  padding: 0.9rem 1rem;
+  transition: border-color 0.25s var(--ease), background 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+  outline: none;
+}
+.field::placeholder {
+  color: var(--color-grey-3);
+}
+.field:focus {
+  border-color: var(--color-aqua);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 0 3px rgba(55, 217, 212, 0.12);
+}
+
+/* ---------------------------------------------------------------- Reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Word-stagger reveal (headlines + body). Never clips descenders: words simply
+   fade and rise into place. */
+.rw {
+  display: inline;
+}
+.rw-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.4em);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  will-change: opacity, transform;
+}
+.rw.is-visible .rw-word {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------------------------------------------------------------- Cursor */
+@media (hover: hover) and (pointer: fine) {
+  .has-custom-cursor,
+  .has-custom-cursor a,
+  .has-custom-cursor button,
+  .has-custom-cursor .chip {
+    cursor: none;
   }
-  to {
-    opacity: 1;
-  }
+}
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 9999px;
+  mix-blend-mode: difference;
+}
+.cursor-dot {
+  width: 7px;
+  height: 7px;
+  background: #fff;
+  transform: translate(-50%, -50%);
+}
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.28s var(--ease), height 0.28s var(--ease),
+    border-color 0.28s var(--ease), background 0.28s var(--ease);
+}
+.cursor-ring[data-hover="true"] {
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.9);
 }
 
-@keyframes slideUp {
-  from {
-    transform: translateY(40px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+/* ---------------------------------------------------------------- Motion */
+@keyframes caret-fade {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+.caret {
+  display: inline-block;
+  width: 0.055em;
+  height: 0.86em;
+  margin-left: 0.07em;
+  transform: translateY(0.06em);
+  background: currentColor;
+  border-radius: 2px;
+  animation: caret-fade 1.15s ease-in-out infinite;
 }
 
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
 }
-
-.animate-fadeIn {
-  animation: fadeIn 0.8s ease-out;
-}
-
-.animate-slideUp {
-  animation: slideUp 0.8s ease-out;
-}
-
 .animate-float {
-  animation: float 6s ease-in-out infinite;
+  animation: float 8s ease-in-out infinite;
+}
+
+/* Hero graphic — orbital system */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes core-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+@keyframes node-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+.orbit {
+  transform-origin: 260px 260px;
+  transform-box: view-box;
+}
+
+/* dash flow for the hero pipeline pulse */
+@keyframes dash-flow {
+  to { stroke-dashoffset: -1000; }
+}
+
+/* Hero "manual -> automated" panel. Each row cycles: a volt bar sweeps across,
+   the status flips from Manual to Automated, holds, then quietly resets.
+   Staggered per row so the panel feels alive without being busy. */
+@keyframes hp-sweep {
+  0% { transform: translateX(-110%); opacity: 0; }
+  3% { opacity: 1; }
+  14% { transform: translateX(110%); opacity: 0; }
+  100% { transform: translateX(110%); opacity: 0; }
+}
+@keyframes hp-manual {
+  0%, 5% { opacity: 1; }
+  11%, 96% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes hp-auto {
+  0%, 5% { opacity: 0; }
+  11%, 96% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes hp-dot {
+  0%, 5% { background: var(--color-grey-3); }
+  11%, 96% { background: var(--color-volt); box-shadow: 0 0 10px rgba(230,255,75,0.6); }
+  100% { background: var(--color-grey-3); box-shadow: none; }
+}
+.hp-row .hp-sweep { animation: hp-sweep 7s var(--ease) infinite; animation-delay: var(--d); }
+.hp-row .hp-manual { animation: hp-manual 7s var(--ease) infinite; animation-delay: var(--d); }
+.hp-row .hp-auto { animation: hp-auto 7s var(--ease) infinite; animation-delay: var(--d); }
+.hp-row .hp-dot { animation: hp-dot 7s var(--ease) infinite; animation-delay: var(--d); }
+
+/* Left-to-right sweep highlight on list rows (cloudstudio-style) */
+.sweep-row { position: relative; overflow: hidden; }
+.sweep-row .sweep-fill {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 0.5s var(--ease);
+  pointer-events: none;
+}
+.sweep-row:hover .sweep-fill,
+.sweep-row[data-active="true"] .sweep-fill {
+  transform: scaleX(1);
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
 }

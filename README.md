@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Codexterity
 
-## Getting Started
+Marketing site for Codexterity — AI automation, websites & custom systems.
+Built with Next.js (App Router), React 19, and Tailwind CSS v4. The design system
+is ported directly from `brand-book.html` (Volt `#E6FF4B` / Cobalt `#4B58FF`,
+Sora + Inter + JetBrains Mono).
 
-First, run the development server:
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Single scrolling landing page (`app/page.tsx`) composed of section components in
+`app/components/`:
 
-## Learn More
+- `Header` — floating Apple-style pill nav, glass-on-scroll, mobile sheet
+- `Hero` — texture/grid/glow background, gradient + typing headline, console mock
+- `Proof` — "plugs into what you already use" integrations marquee
+- `Services` — boxy grid with bespoke line icons (`Icon.tsx`)
+- `PackageBuilder` — the "build your package" scope collector (Volt chips)
+- `Process`, `About`, `Contact`, `Footer`
+- `InquiryContext` — shares the selected services/budget/timeline between the
+  package builder and the contact form
 
-To learn more about Next.js, take a look at the following resources:
+Shared data (services, budgets, timelines) lives in `app/lib/data.ts`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contact form email (`/api/inquiry`)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The contact + package form POSTs to `app/api/inquiry/route.ts`, which sends email
+via **nodemailer**. Until SMTP is configured, submissions are logged server-side
+and the form still succeeds (nothing is lost) — no email is sent.
 
-## Deploy on Vercel
+Copy `.env.example` to `.env.local` for local dev, and set the same variables in
+**Vercel → Project → Settings → Environment Variables** for production:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS
+INQUIRY_TO   (default: hello@codexterity.ai)
+INQUIRY_FROM
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Any SMTP provider works (Resend, Postmark, SendGrid, a Gmail app password, etc.).
+
+## Deploy (Vercel, free)
+
+This is a standard Next.js app (no `output: "export"`), so Vercel's free Hobby
+tier runs the `/api/inquiry` serverless function at no cost. Push to a Git repo,
+import it in Vercel, add the env vars above, and deploy.

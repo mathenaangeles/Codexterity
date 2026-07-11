@@ -1,0 +1,28 @@
+{
+  "projectId": "5ccd9c23-a592-49fa-bfce-16f2e399f830",
+  "shape": "package",
+  "pkg": "codexterity",
+  "globalName": "Codexterity",
+  "entry": "./.design-sync/entry.ts",
+  "srcDir": "app/components",
+  "tsconfig": "./tsconfig.json",
+  "buildCmd": ".ds-sync/node_modules/.bin/tailwindcss -i app/globals.css -o .design-sync/.cache/tailwind.css --cwd .",
+  "cssEntry": ".design-sync/.cache/tailwind.css",
+  "extraFonts": [".design-sync/fonts/inter.css"],
+  "overrides": {
+    "Header": { "cardMode": "single", "viewport": "1280x200" },
+    "Hero": { "cardMode": "single", "viewport": "1280x1000" },
+    "Contact": { "cardMode": "single", "viewport": "1280x950" }
+  },
+  "componentSrcMap": {
+    "Header": "app/components/Header.tsx",
+    "Hero": "app/components/Hero.tsx",
+    "Proof": "app/components/Proof.tsx",
+    "Services": "app/components/Services.tsx",
+    "PackageBuilder": "app/components/PackageBuilder.tsx",
+    "Process": "app/components/Process.tsx",
+    "Results": "app/components/Results.tsx",
+    "Contact": "app/components/Contact.tsx",
+    "Footer": "app/components/Footer.tsx"
+  }
+}
