@@ -217,9 +217,17 @@ export function WorkflowVignette() {
   const week = [5, 8, 6, 9, 7, 10, 8];
   return (
     <div className="flex h-full flex-col justify-between gap-2">
-      {/* builder header */}
+      {/* builder header: an inline timeline instead of arrow glyphs */}
       <div className="flex items-center justify-between rounded-lg border border-white/[0.07] bg-white/[0.02] px-3 py-2">
-        <span className="truncate text-[11px] font-medium text-white">New order → invoice → notify</span>
+        <div className="flex items-center gap-1.5 text-[10.5px] font-medium text-grey-2">
+          {["New order", "invoice", "notify"].map((step, i) => (
+            <span key={step} className="flex items-center gap-1.5">
+              {i > 0 && <span className="h-px w-3 bg-white/15" aria-hidden />}
+              <span className="h-1.5 w-1.5 rounded-full bg-volt" aria-hidden />
+              {step}
+            </span>
+          ))}
+        </div>
         <span className="flex items-center gap-1.5 rounded-full bg-mint/12 px-2 py-0.5 text-[9.5px] font-bold text-mint">
           <span className="h-1 w-1 rounded-full bg-mint" />
           ON
@@ -235,8 +243,17 @@ export function WorkflowVignette() {
 
       {/* run history with sparkline */}
       <div className="flex items-center justify-between gap-3 rounded-lg border border-white/[0.07] bg-white/[0.02] px-3 py-2">
-        <span className="text-[10.5px] text-grey-2">
-          <span className="font-semibold text-white">142 runs</span> this week, <span className="font-semibold text-mint">0 errors</span>.
+        <span className="flex items-center gap-2 text-[10.5px] text-grey-2">
+          <span>
+            <span className="font-semibold text-white">142</span> runs this week
+          </span>
+          <span className="h-3 w-px bg-white/15" aria-hidden />
+          <span className="inline-flex items-center gap-1 rounded-full border border-mint/30 bg-mint/10 px-1.5 py-0.5 text-[9px] font-semibold text-mint">
+            <svg width="8" height="8" viewBox="0 0 16 16" fill="none" aria-hidden>
+              <path d="M3.5 8.5l3 3 6-7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            0 errors
+          </span>
         </span>
         <span className="flex h-4 items-end gap-[3px]" aria-hidden>
           {week.map((v, i) => (
@@ -309,11 +326,36 @@ export function SupportVignette() {
 
 /* ------------------------------------------- 4 · website building itself */
 
+function RingGauge({ value }: { value: number }) {
+  const r = 11;
+  const c = 2 * Math.PI * r;
+  const off = c * (1 - value / 100);
+  return (
+    <span className="relative flex h-8 w-8 shrink-0 items-center justify-center">
+      <svg width="32" height="32" viewBox="0 0 32 32" className="-rotate-90">
+        <circle cx="16" cy="16" r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2.5" />
+        <circle
+          cx="16"
+          cy="16"
+          r={r}
+          fill="none"
+          stroke="#7cf3b0"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={off}
+        />
+      </svg>
+      <span className="absolute text-[8.5px] font-bold text-mint">{value}</span>
+    </span>
+  );
+}
+
 export function WebVignette() {
   const scores = [
-    { ring: "100", label: "Speed", sub: "1.2s load" },
-    { ring: "98", label: "SEO", sub: "#1 on Google" },
-    { ring: "100", label: "Mobile", sub: "+38% conversions" },
+    { ring: 100, label: "Speed", sub: "1.2s load" },
+    { ring: 98, label: "SEO", sub: "#1 on Google" },
+    { ring: 100, label: "Mobile", sub: "+38% conv." },
   ];
   return (
     <div className="flex h-full flex-col">
@@ -361,10 +403,8 @@ export function WebVignette() {
         {/* audit bar: ring gauges with their receipts, one glass strip */}
         <div className="vg-in absolute bottom-3 left-3 right-3 grid grid-cols-3 divide-x divide-white/[0.08] rounded-lg border border-white/10 bg-black/60 py-2 backdrop-blur-sm" style={{ ["--vd" as string]: "3.2s" }}>
           {scores.map((s) => (
-            <span key={s.label} className="flex items-center justify-center gap-2 px-2">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-[1.5px] border-mint/60 text-[9px] font-bold text-mint">
-                {s.ring}
-              </span>
+            <span key={s.label} className="flex items-center justify-center gap-2 px-1.5">
+              <RingGauge value={s.ring} />
               <span className="leading-tight">
                 <span className="block text-[10px] font-semibold text-white">{s.label}</span>
                 <span className="block text-[9px] text-grey-2">{s.sub}</span>
@@ -479,8 +519,8 @@ export function LeadsVignette() {
 export function AnalyticsVignette() {
   const kpis = [
     { label: "Revenue", value: "$48.2k", delta: "+12%" },
-    { label: "Hours saved", value: "31", delta: "this week" },
-    { label: "Open tickets", value: "4", delta: "-63%" },
+    { label: "New Leads", value: "128", delta: "+18%" },
+    { label: "Hours Saved", value: "31", delta: "in 7 days" },
   ];
   const bars = [38, 52, 44, 60, 55, 72, 66, 88];
   return (
@@ -494,38 +534,30 @@ export function AnalyticsVignette() {
           </div>
         ))}
       </div>
-      {/* bar chart + trend line, both animated */}
+      {/* clean bar chart: uniform bars, this week highlighted, growth chip */}
       <div className="relative flex-1 overflow-hidden rounded-lg border border-white/[0.07] bg-white/[0.02] p-2">
         <div className="flex items-center justify-between px-1 pb-1.5">
           <span className="text-[9.5px] font-medium text-grey-2">Revenue by week</span>
-          <span className="flex items-center gap-1 text-[9px] text-grey">
-            <span className="h-1 w-1 rounded-full bg-aqua" />
-            Trend
+          <span className="inline-flex items-center gap-1 rounded-full bg-mint/12 px-1.5 py-0.5 text-[9px] font-bold text-mint">
+            <svg width="8" height="8" viewBox="0 0 16 16" fill="none" aria-hidden>
+              <path d="M8 13V4M8 4 4.5 7.5M8 4l3.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            +34%
           </span>
         </div>
-        <div className="relative h-[calc(100%-20px)]">
-          <div className="absolute inset-0 flex items-end justify-between gap-1.5 px-1">
-            {bars.map((v, i) => (
-              <span
-                key={i}
-                className="vg-bar w-full rounded-t-[3px]"
-                style={{
-                  height: `${v}%`,
-                  background: i === bars.length - 1 ? "var(--grad-brand-soft)" : "rgba(255,255,255,0.10)",
-                  ["--vd" as string]: `${0.3 + i * 0.14}s`,
-                }}
-              />
-            ))}
-          </div>
-          <svg viewBox="0 0 240 80" preserveAspectRatio="none" className="pointer-events-none absolute inset-0 h-full w-full" fill="none" aria-hidden>
-            <path
-              d="M14 52 C 40 46, 60 42, 88 40 C 118 38, 132 30, 162 26 C 190 22, 210 18, 228 10"
-              stroke="#37d9d4"
-              strokeWidth="2"
-              strokeLinecap="round"
-              className="vg-draw"
+        <div className="relative flex h-[calc(100%-20px)] items-end justify-between gap-1.5 px-1">
+          {bars.map((v, i) => (
+            <span
+              key={i}
+              className="vg-bar w-full rounded-t-[3px]"
+              style={{
+                height: `${v}%`,
+                background: i === bars.length - 1 ? "var(--grad-brand-soft)" : "rgba(255,255,255,0.09)",
+                ["--vd" as string]: `${0.3 + i * 0.14}s`,
+              }}
             />
-          </svg>
+          ))}
+          <span className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/10" aria-hidden />
         </div>
       </div>
       {/* ask your data: a real chat exchange with avatars */}
@@ -534,8 +566,11 @@ export function AnalyticsVignette() {
           <span className="rounded-lg rounded-br-sm bg-white/[0.06] px-2.5 py-1.5 text-[11px] text-white">
             Which channel grew fastest?
           </span>
-          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/[0.09] text-[8px] font-bold text-grey-2">
-            You
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/[0.09] text-grey-2">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <circle cx="12" cy="8" r="3.2" stroke="currentColor" strokeWidth="1.8" />
+              <path d="M5.5 19c0-3.2 2.9-5 6.5-5s6.5 1.8 6.5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
           </span>
         </div>
         <div className="vg-in flex w-fit items-center gap-1.5" style={{ ["--vd" as string]: "3.9s" }}>
@@ -543,7 +578,7 @@ export function AnalyticsVignette() {
             <Image src="/x-mark.png" alt="" aria-hidden width={166} height={196} className="h-2.5 w-auto" />
           </span>
           <span className="rounded-lg rounded-bl-sm bg-volt/12 px-2.5 py-1.5 text-[11px] font-medium text-volt">
-            Instagram grew the fastest. It&apos;s up 34% this month.
+            Instagram grew the fastest, up 34% this month.
           </span>
         </div>
       </div>

@@ -23,26 +23,26 @@ import {
 
 const DEMOS: Record<string, { hook: string; outcome: string; accent: string; vignette: React.ReactNode }> = {
   "ai-agents": {
-    hook: "Repetitive tasks handled while you sleep.",
-    outcome: "An agent that reads, decides, and acts across your tools. The queue is clear before you sit down.",
+    hook: "Your busywork gets done while you sleep.",
+    outcome: "An agent reads, decides, and acts across your tools, so the queue is already clear before you sit down.",
     accent: "rgba(230,255,75,0.26)",
     vignette: <AgentVignette />,
   },
   "workflow-automation": {
-    hook: "Your tools, finally talking to each other.",
-    outcome: "One trigger runs the whole chain. Order in, invoice out, team notified, sheet updated. Zero copy-paste.",
+    hook: "Your tools finally talk to each other.",
+    outcome: "One trigger runs the whole chain: the order comes in, the invoice goes out, the team is notified, and the sheet updates itself.",
     accent: "rgba(111,121,255,0.34)",
     vignette: <WorkflowVignette />,
   },
   "chatbots-voice": {
-    hook: "Every customer question answered in seconds.",
-    outcome: "A trained assistant on your site, WhatsApp, or phone that answers instantly, day and night, and escalates only the tricky ones.",
+    hook: "Every question gets answered in seconds.",
+    outcome: "A trained assistant answers instantly on your site, WhatsApp, or phone, day and night, and escalates only the tricky ones.",
     accent: "rgba(230,255,75,0.22)",
     vignette: <SupportVignette />,
   },
   "web-development": {
-    hook: "A website that sells while you work.",
-    outcome: "Fast, built to rank on Google, and designed to turn visitors into booked calls, not just traffic.",
+    hook: "Your website sells while you work.",
+    outcome: "It loads fast, ranks on Google, and turns visitors into booked calls instead of just traffic.",
     accent: "rgba(55,217,212,0.28)",
     vignette: <WebVignette />,
   },
@@ -53,8 +53,8 @@ const DEMOS: Record<string, { hook: string; outcome: string; accent: string; vig
     vignette: <LeadsVignette />,
   },
   "dashboards-bi": {
-    hook: "Every number that matters, on one screen.",
-    outcome: "A live dashboard you can ask questions in plain English. The Monday report writes itself.",
+    hook: "Every number that matters lives on one screen.",
+    outcome: "You get a live dashboard you can question in plain English, and the Monday report writes itself.",
     accent: "rgba(55,217,212,0.3)",
     vignette: <AnalyticsVignette />,
   },

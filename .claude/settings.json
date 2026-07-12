@@ -12,7 +12,10 @@
       "Bash(sips -c 328 400 --cropOffset 0 600 logo4x.png --out logo4x-mid.png)",
       "Bash(sips -c 192 196 --cropOffset 88 722 logo4x.png --out xmark.png)",
       "Bash(sips -g pixelWidth -g pixelHeight xmark.png)",
-      "Bash(pkill -f \"next dev\")"
+      "Bash(pkill -f \"next dev\")",
+      "Bash(grep -vE \"baseline-browser|Deprecation|> codexterity|> eslint|^$\")",
+      "Bash('/Applications/Brave Browser.app/Contents/MacOS/Brave Browser' --headless --disable-gpu --hide-scrollbars --force-device-scale-factor=2 --virtual-time-budget=6500 --window-size=1100,1560 --screenshot=/private/tmp/claude-501/-Users-mathena-Documents-GitHub-Codexterity/26800475-31e9-4595-9fee-b00e6a81416f/scratchpad/vig2.png http://localhost:3116/vigtest)",
+      "Bash('/Applications/Brave Browser.app/Contents/MacOS/Brave Browser' --headless --disable-gpu --hide-scrollbars --force-device-scale-factor=2 --virtual-time-budget=2500 --window-size=1100,1560 --screenshot=/private/tmp/claude-501/-Users-mathena-Documents-GitHub-Codexterity/26800475-31e9-4595-9fee-b00e6a81416f/scratchpad/vig3.png http://localhost:3116/vigtest)"
     ]
   }
 }
