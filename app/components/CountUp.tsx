@@ -29,17 +29,16 @@ export default function CountUp({
     if (!el || done) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
-      setValue(to);
-      setDone(true);
-      return;
-    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
         observer.disconnect();
         setDone(true);
+        if (reduce) {
+          setValue(to);
+          return;
+        }
         const start = performance.now();
         const step = (now: number) => {
           const p = Math.min((now - start) / duration, 1);

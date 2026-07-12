@@ -71,6 +71,21 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Lenis owns scrolling when active — native smooth behavior would fight it */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
   body {
     font-family: var(--font-body);
     background: #050506;
@@ -118,6 +133,9 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.001ms !important;
       scroll-behavior: auto !important;
+    }
+    .caret {
+      display: none;
     }
   }
 }
@@ -184,22 +202,25 @@
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.07;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.16;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.5'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Visible section grid — hex.tech/pricing style boxed texture for specific
-   sections. Use .section-grid on an absolutely-positioned layer inside a section. */
+/* Visible section grid — hex.tech blueprint graph paper: a fine sub-grid, a
+   stronger major grid, and "+" registration marks at every other major
+   intersection. Use .section-grid on an absolute layer inside a section. */
 .section-grid {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.055) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
-  background-size: 56px 56px;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='112'%3E%3Cpath d='M56 50v12M50 56h12' stroke='rgba(255,255,255,0.28)' stroke-width='1'/%3E%3C/svg%3E"),
+    linear-gradient(to right, rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+    linear-gradient(to right, rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+  background-size: 112px 112px, 56px 56px, 56px 56px, 14px 14px, 14px 14px;
 }
 .section-grid-fade {
   -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 0%, transparent 80%);
@@ -250,38 +271,30 @@
 }
 
 /* ---------------------------------------------------------------- Buttons
-   Bespoke CTA: a label cell + a divided arrow cell, with a sheen sweep on
-   hover and the arrow advancing into its cell (hex.tech/pricing energy). */
+   Blueprint CTA (hex.tech/pricing): a boxy button with registration marks at
+   the four corners. At rest the marks are small circles; on hover they snap
+   into L-brackets and step outward, like a selection in a design tool. */
 .cta {
   position: relative;
   display: inline-flex;
-  align-items: stretch;
-  overflow: hidden;
-  border-radius: 12px;
+  align-items: center;
+  gap: 0.6rem;
+  border-radius: 3px;
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 15px;
   letter-spacing: -0.01em;
+  padding: 0.8rem 1.3rem;
   cursor: pointer;
-  isolation: isolate;
-  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease),
-    border-color 0.3s var(--ease), background 0.3s var(--ease);
-  will-change: transform;
+  transition: transform 0.35s var(--ease), background 0.3s var(--ease),
+    border-color 0.3s var(--ease), box-shadow 0.35s var(--ease);
 }
 .cta:active {
-  transform: scale(0.985);
-}
-.cta .cta-label {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.82rem 1.15rem;
+  transform: scale(0.98);
 }
 .cta .cta-arrow {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 44px;
-  position: relative;
 }
 .cta .cta-arrow svg {
   transition: transform 0.42s var(--ease);
@@ -289,50 +302,86 @@
 .cta:hover .cta-arrow svg {
   transform: translateX(4px);
 }
-/* sheen sweep */
-.cta::before {
-  content: "";
+
+/* the four registration marks */
+.cta .bp {
   position: absolute;
-  inset: 0;
-  z-index: 2;
+  width: 7px;
+  height: 7px;
+  border: 1px solid;
+  border-radius: 9999px;
+  opacity: 0.9;
   pointer-events: none;
-  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
-  transform: translateX(-130%);
-  transition: transform 0.7s var(--ease);
+  transition: all 0.3s var(--ease);
 }
-.cta:hover::before {
-  transform: translateX(130%);
+.cta .bp-tl { top: -4px; left: -4px; }
+.cta .bp-tr { top: -4px; right: -4px; }
+.cta .bp-bl { bottom: -4px; left: -4px; }
+.cta .bp-br { bottom: -4px; right: -4px; }
+.cta:hover .bp {
+  width: 9px;
+  height: 9px;
+  border-radius: 0;
 }
+.cta:hover .bp-tl { top: -7px; left: -7px; border-width: 1.5px 0 0 1.5px; }
+.cta:hover .bp-tr { top: -7px; right: -7px; border-width: 1.5px 1.5px 0 0; }
+.cta:hover .bp-bl { bottom: -7px; left: -7px; border-width: 0 0 1.5px 1.5px; }
+.cta:hover .bp-br { bottom: -7px; right: -7px; border-width: 0 1.5px 1.5px 0; }
 
 .cta-primary {
   background: var(--color-volt);
   color: #0a0a08;
-  box-shadow: 0 10px 30px -16px rgba(230, 255, 75, 0.9);
+  border: 1px solid var(--color-volt);
+  box-shadow: 0 10px 30px -16px rgba(230, 255, 75, 0.8);
+}
+.cta-primary .bp {
+  border-color: var(--color-volt);
 }
 .cta-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 18px 44px -18px rgba(230, 255, 75, 0.95);
-}
-.cta-primary .cta-arrow {
-  border-left: 1px solid rgba(0, 0, 0, 0.22);
+  background: #f0ff6e;
+  box-shadow: 0 16px 40px -16px rgba(230, 255, 75, 0.9);
 }
 
 .cta-ghost {
   background: rgba(255, 255, 255, 0.02);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+.cta-ghost .bp {
+  border-color: rgba(255, 255, 255, 0.55);
 }
 .cta-ghost:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.32);
   background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.4);
 }
-.cta-ghost .cta-arrow {
-  border-left: 1px solid rgba(255, 255, 255, 0.14);
+
+/* compact size for the navbar — smaller, and the corner marks stay tucked in
+   on hover so they never touch the surrounding pill edge */
+.cta-sm {
+  padding: 0.38rem 0.8rem;
+  font-size: 13px;
+  gap: 0.4rem;
 }
-.cta-ghost::before {
-  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.12) 50%, transparent 70%);
+.cta-sm .cta-arrow svg {
+  width: 13px;
+  height: 13px;
 }
+.cta-sm .bp {
+  width: 5px;
+  height: 5px;
+}
+.cta-sm .bp-tl { top: -3px; left: -3px; }
+.cta-sm .bp-tr { top: -3px; right: -3px; }
+.cta-sm .bp-bl { bottom: -3px; left: -3px; }
+.cta-sm .bp-br { bottom: -3px; right: -3px; }
+.cta-sm:hover .bp {
+  width: 6px;
+  height: 6px;
+}
+.cta-sm:hover .bp-tl { top: -4px; left: -4px; }
+.cta-sm:hover .bp-tr { top: -4px; right: -4px; }
+.cta-sm:hover .bp-bl { bottom: -4px; left: -4px; }
+.cta-sm:hover .bp-br { bottom: -4px; right: -4px; }
 
 /* Simple pill button kept for small/secondary uses */
 .btn {
@@ -576,49 +625,333 @@
   to { stroke-dashoffset: -1000; }
 }
 
-/* Hero "manual -> automated" panel. Each row cycles: a volt bar sweeps across,
-   the status flips from Manual to Automated, holds, then quietly resets.
-   Staggered per row so the panel feels alive without being busy. */
-@keyframes hp-sweep {
-  0% { transform: translateX(-110%); opacity: 0; }
-  3% { opacity: 1; }
-  14% { transform: translateX(110%); opacity: 0; }
-  100% { transform: translateX(110%); opacity: 0; }
+/* Hero "while you slept" panel: notifications land one by one, hold together,
+   then the night restarts. One 12s clock, staggered via --nd. */
+@keyframes notif-in {
+  0% { opacity: 0; transform: translateY(14px) scale(0.97); }
+  4% { opacity: 1; transform: none; }
+  90% { opacity: 1; transform: none; }
+  97%, 100% { opacity: 0; transform: translateY(-6px); }
 }
-@keyframes hp-manual {
-  0%, 5% { opacity: 1; }
-  11%, 96% { opacity: 0; }
-  100% { opacity: 1; }
+.notif {
+  opacity: 0;
+  animation: notif-in 12s var(--ease) infinite;
+  animation-delay: var(--nd, 0s);
 }
-@keyframes hp-auto {
-  0%, 5% { opacity: 0; }
-  11%, 96% { opacity: 1; }
-  100% { opacity: 0; }
+@keyframes notif-count {
+  0%, 2% { opacity: 0.4; }
+  6%, 90% { opacity: 1; }
+  97%, 100% { opacity: 0.4; }
 }
-@keyframes hp-dot {
-  0%, 5% { background: var(--color-grey-3); }
-  11%, 96% { background: var(--color-volt); box-shadow: 0 0 10px rgba(230,255,75,0.6); }
-  100% { background: var(--color-grey-3); box-shadow: none; }
+.notif-count {
+  animation: notif-count 12s var(--ease) infinite;
+  animation-delay: var(--nd, 0s);
 }
-.hp-row .hp-sweep { animation: hp-sweep 7s var(--ease) infinite; animation-delay: var(--d); }
-.hp-row .hp-manual { animation: hp-manual 7s var(--ease) infinite; animation-delay: var(--d); }
-.hp-row .hp-auto { animation: hp-auto 7s var(--ease) infinite; animation-delay: var(--d); }
-.hp-row .hp-dot { animation: hp-dot 7s var(--ease) infinite; animation-delay: var(--d); }
 
-/* Left-to-right sweep highlight on list rows (cloudstudio-style) */
+/* Left-to-right volt sweep on list rows (cloudstudio Selected Work): the fill
+   floods the whole row so the active item is unmistakable. Row text is
+   flipped to ink by the component when active. Hover preview lives on its
+   own layer (a simple fade) so leaving a row never replays the volt sweep. */
 .sweep-row { position: relative; overflow: hidden; }
+.sweep-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(255, 255, 255, 0.045);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+  pointer-events: none;
+}
+.sweep-row:hover::before {
+  opacity: 1;
+}
+.sweep-row[data-active="true"]::before {
+  opacity: 0;
+}
 .sweep-row .sweep-fill {
   position: absolute;
   inset: 0;
   z-index: 0;
+  background: var(--color-volt);
   transform-origin: left center;
   transform: scaleX(0);
-  transition: transform 0.5s var(--ease);
+  transition: transform 0.45s var(--ease);
   pointer-events: none;
 }
-.sweep-row:hover .sweep-fill,
 .sweep-row[data-active="true"] .sweep-fill {
   transform: scaleX(1);
+}
+
+/* Full-page menu items: huge outlined type that fills solid and indents on
+   hover, with a brand-gradient rule drawing underneath. Distinct from the
+   services volt flood on purpose. */
+.menu-label {
+  /* sketchy but readable: a faint fill under a stronger stroke */
+  color: rgba(255, 255, 255, 0.1);
+  -webkit-text-stroke: 1.4px rgba(255, 255, 255, 0.62);
+  transition: color 0.35s var(--ease), -webkit-text-stroke-color 0.35s var(--ease),
+    transform 0.5s var(--ease);
+  will-change: transform;
+}
+a:hover .menu-label,
+a:focus-visible .menu-label {
+  color: #fff;
+  -webkit-text-stroke-color: transparent;
+  transform: translateX(12px);
+}
+.menu-rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1.5px;
+  background: var(--grad-brand);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.55s var(--ease);
+  pointer-events: none;
+}
+a:hover .menu-rule,
+a:focus-visible .menu-rule {
+  transform: scaleX(1);
+}
+
+/* Chat launcher: volt sparks emit from the X mark while hovered */
+@keyframes chat-emit {
+  0% { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
+  12% { opacity: 0.9; }
+  100% { transform: translate(calc(-50% + var(--ex)), calc(-50% + var(--ey))) scale(0.2); opacity: 0; }
+}
+.chat-orbit {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.chat-orbit span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 9999px;
+  background: var(--color-volt);
+  opacity: 0;
+}
+button:hover .chat-orbit span,
+.chat-launcher[data-open="true"] .chat-orbit span {
+  animation: chat-emit 1.5s ease-out infinite;
+  animation-delay: var(--ed, 0s);
+}
+
+/* Rolling label hover (itsoffbrand): the label slides up and its twin rolls
+   in from below. Wrap the text in .roll > .roll-inner[data-text]. */
+.roll {
+  display: inline-flex;
+  overflow: hidden;
+}
+.roll .roll-inner {
+  position: relative;
+  display: block;
+  transition: transform 0.4s var(--ease);
+}
+.roll .roll-inner::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  white-space: nowrap;
+}
+a:hover > .roll .roll-inner,
+.roll:hover .roll-inner,
+a:hover.roll .roll-inner {
+  transform: translateY(-100%);
+}
+
+/* ---------------------------------------------------------------- Spotlight
+   hex.tech-style pointer glow: ScrollFX feeds --mx/--my; the card lights a
+   radial halo under the cursor. Painted on a ::after so content stays clean. */
+.spotlight-card {
+  position: relative;
+}
+.spotlight-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s var(--ease);
+  background: radial-gradient(
+    340px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(55, 217, 212, 0.09),
+    rgba(75, 88, 255, 0.05) 45%,
+    transparent 70%
+  );
+}
+.spotlight-card:hover::after {
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------- Vignettes
+   Finished mini-UIs for "What we automate". Each loops on a shared 8s clock
+   (delay-staggered inside the component) so the panel always looks alive. */
+
+/* generic pop-in for vignette elements, staggered via --vd */
+@keyframes vg-in {
+  0%, 4% { opacity: 0; transform: translateY(7px) scale(0.985); }
+  10%, 88% { opacity: 1; transform: none; }
+  96%, 100% { opacity: 0; transform: translateY(7px) scale(0.985); }
+}
+.vg-in {
+  opacity: 0;
+  animation: vg-in 8s var(--ease) infinite;
+  animation-delay: var(--vd, 0s);
+}
+
+/* typing dots (chat vignette + chat widget) */
+@keyframes dot-bounce {
+  0%, 60%, 100% { transform: none; opacity: 0.45; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
+.typing-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: dot-bounce 1.1s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.14s; }
+.typing-dot:nth-child(3) { animation-delay: 0.28s; }
+
+/* typing bubble that disappears when the reply lands */
+@keyframes vg-typing {
+  0%, 8% { opacity: 0; transform: translateY(6px); }
+  12%, 30% { opacity: 1; transform: none; }
+  34%, 100% { opacity: 0; transform: translateY(-3px); }
+}
+.vg-typing {
+  opacity: 0;
+  animation: vg-typing 8s var(--ease) infinite;
+}
+
+/* status pill flip: "sent" -> "paid" (invoice vignette) */
+/* a fully clears before b lands, so mismatched labels never double-expose */
+@keyframes vg-flip-a {
+  0%, 36% { opacity: 1; }
+  40%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes vg-flip-b {
+  0%, 41% { opacity: 0; transform: scale(0.92); }
+  45%, 92% { opacity: 1; transform: none; }
+  100% { opacity: 0; }
+}
+.vg-flip-a { animation: vg-flip-a 8s var(--ease) infinite; animation-delay: var(--vd, 0s); }
+.vg-flip-b { opacity: 0; animation: vg-flip-b 8s var(--ease) infinite; animation-delay: var(--vd, 0s); }
+
+/* kanban card advancing through pipeline stages (lead follow-up vignette).
+   The card sits over a 3-column board and steps column to column. */
+/* workflow builder: each step card lights in sequence, then the run resets */
+@keyframes vg-node {
+  0%, 6% { border-color: rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.02); }
+  12%, 80% { border-color: rgba(230, 255, 75, 0.45); background: rgba(230, 255, 75, 0.05); }
+  90%, 100% { border-color: rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.02); }
+}
+.vg-node {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  animation: vg-node 8s var(--ease) infinite;
+  animation-delay: var(--vd, 0s);
+}
+@keyframes vg-node-dot {
+  0%, 6% { background: var(--color-grey-3); box-shadow: none; }
+  12%, 80% { background: var(--color-volt); box-shadow: 0 0 8px rgba(230, 255, 75, 0.7); }
+  90%, 100% { background: var(--color-grey-3); box-shadow: none; }
+}
+.vg-node-dot {
+  animation: vg-node-dot 8s var(--ease) infinite;
+  animation-delay: var(--vd, 0s);
+}
+/* connector between steps fills top-to-bottom as the run passes */
+@keyframes vg-wire {
+  0%, 8% { transform: scaleY(0); }
+  14%, 80% { transform: scaleY(1); }
+  90%, 100% { transform: scaleY(0); }
+}
+.vg-wire {
+  transform-origin: top;
+  transform: scaleY(0);
+  animation: vg-wire 8s var(--ease) infinite;
+  animation-delay: var(--vd, 0s);
+}
+
+/* Hops between the reserved slot of each column (own width + column padding
+   16px + gap 8px per hop), fully opaque while moving — it only fades to
+   restart the loop. */
+@keyframes vg-lead-card {
+  0% { transform: translateX(0); opacity: 0; }
+  5%, 24% { transform: translateX(0); opacity: 1; }
+  32%, 56% { transform: translateX(calc(100% + 24px)); opacity: 1; }
+  64%, 92% { transform: translateX(calc(200% + 48px)); opacity: 1; }
+  97%, 100% { transform: translateX(calc(200% + 48px)); opacity: 0; }
+}
+.vg-lead-card {
+  animation: vg-lead-card 9s var(--ease) infinite;
+}
+/* stage header lights when the card arrives */
+@keyframes vg-stage-1 { 0%, 22% { color: #fff; } 30%, 100% { color: var(--color-grey-3); } }
+@keyframes vg-stage-2 { 0%, 26% { color: var(--color-grey-3); } 32%, 58% { color: #fff; } 64%, 100% { color: var(--color-grey-3); } }
+@keyframes vg-stage-3 { 0%, 60% { color: var(--color-grey-3); } 66%, 92% { color: var(--color-volt); } 100% { color: var(--color-grey-3); } }
+.vg-stage-1 { animation: vg-stage-1 9s var(--ease) infinite; }
+.vg-stage-2 { animation: vg-stage-2 9s var(--ease) infinite; }
+.vg-stage-3 { animation: vg-stage-3 9s var(--ease) infinite; }
+
+/* chart line draws itself (reporting vignette) */
+@keyframes vg-draw {
+  0%, 6% { stroke-dashoffset: 260; }
+  46%, 90% { stroke-dashoffset: 0; }
+  98%, 100% { stroke-dashoffset: 260; }
+}
+.vg-draw {
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: vg-draw 8s var(--ease) infinite;
+}
+@keyframes vg-bar {
+  0%, 6% { transform: scaleY(0); }
+  40%, 90% { transform: scaleY(1); }
+  98%, 100% { transform: scaleY(0); }
+}
+.vg-bar {
+  transform-origin: bottom;
+  transform: scaleY(0);
+  animation: vg-bar 8s var(--ease) infinite;
+  animation-delay: var(--vd, 0s);
+}
+
+/* checklist tick + strike (onboarding vignette) */
+@keyframes vg-check {
+  0%, 10% { background: rgba(255,255,255,0.04); border-color: var(--color-line-2); }
+  16%, 90% { background: var(--color-volt); border-color: var(--color-volt); }
+  98%, 100% { background: rgba(255,255,255,0.04); border-color: var(--color-line-2); }
+}
+@keyframes vg-check-mark {
+  0%, 10% { opacity: 0; transform: scale(0.4); }
+  16%, 90% { opacity: 1; transform: scale(1); }
+  98%, 100% { opacity: 0; }
+}
+.vg-check { animation: vg-check 8s var(--ease) infinite; animation-delay: var(--vd, 0s); }
+.vg-check svg { opacity: 0; animation: vg-check-mark 8s var(--ease) infinite; animation-delay: var(--vd, 0s); }
+
+/* progress bar fill */
+@keyframes vg-progress {
+  0%, 8% { transform: scaleX(0.1); }
+  70%, 90% { transform: scaleX(1); }
+  98%, 100% { transform: scaleX(0.1); }
+}
+.vg-progress {
+  transform-origin: left;
+  animation: vg-progress 8s var(--ease) infinite;
 }
 
 @keyframes marquee {
@@ -633,4 +966,80 @@
 .marquee-mask {
   -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
   mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
+
+/* ---- Integration "paper" panel (hex.tech blueprint style) ----
+   A grained sheet that reads as cut out from the page, but made of the SAME
+   dark material as the rest of the site: slightly lifted surface, heavy
+   grain, margin frame, corner crop-marks, "+" crosshairs at every grid
+   intersection. Logos rest light grey and turn cobalt / aqua on hover. */
+.paper-panel {
+  position: relative;
+  /* the exact .panel surface the rest of the site uses, plus grain: the sheet
+     is our material, only the blueprint framing makes it special */
+  background: linear-gradient(180deg, #101013 0%, #0b0b0d 100%);
+  border-radius: 6px;
+  box-shadow:
+    0 40px 90px -40px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+/* Two grain plies so the sheet actually reads as paper on a dark theme:
+   a light speckle (screen) that lifts the tooth of the paper, and a darker
+   mottle (overlay) that gives it depth. */
+.paper-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E");
+  opacity: 0.16;
+  mix-blend-mode: screen;
+}
+.paper-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  opacity: 0.55;
+  mix-blend-mode: overlay;
+}
+.tool-cell {
+  position: relative;
+  /* translucent so the sheet's tinted gradient + grain read through */
+  background: rgba(10, 10, 13, 0.55);
+  transition: background 0.3s var(--ease);
+}
+.tool-cell svg {
+  fill: var(--color-grey-2);
+  transition: fill 0.3s var(--ease), transform 0.35s var(--ease);
+}
+.tool-cell:hover {
+  background: var(--hc);
+}
+.tool-cell:hover svg {
+  fill: var(--lc);
+}
+.tool-cell .tool-name {
+  color: var(--lc);
+}
+/* "+" crosshair centered on each cell's top-left grid intersection */
+.tool-cell::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  width: 11px;
+  height: 11px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) center / 11px 1.2px no-repeat,
+    linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) center / 1.2px 11px no-repeat;
 }

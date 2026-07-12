@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { CHAT_INTRO, CHAT_ROOT_OPTIONS, CHAT_NODES, type ChatOption } from "../lib/chat";
 
 type Msg = { from: "bot" | "user"; lines: string[] };
@@ -23,26 +24,46 @@ function Line({ text }: { text: string }) {
   );
 }
 
+/** The standalone brand mark: the actual X cropped from the wordmark. */
+function XMark({ size = 16 }: { size?: number }) {
+  return (
+    <Image
+      src="/x-mark.png"
+      alt=""
+      aria-hidden
+      width={166}
+      height={196}
+      className="w-auto"
+      style={{ height: size }}
+    />
+  );
+}
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([{ from: "bot", lines: [CHAT_INTRO] }]);
   const [options, setOptions] = useState<ChatOption[]>(CHAT_ROOT_OPTIONS);
   const [atRoot, setAtRoot] = useState(true);
+  const [typing, setTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Deep-link: /#ask opens the chat (handy for "questions?" links).
   useEffect(() => {
-    if (window.location.hash === "#ask") setOpen(true);
+    const raf = requestAnimationFrame(() => {
+      if (window.location.hash === "#ask") setOpen(true);
+    });
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, open]);
+  }, [messages, typing, open]);
 
   const reset = () => {
     setMessages([{ from: "bot", lines: [CHAT_INTRO] }]);
     setOptions(CHAT_ROOT_OPTIONS);
     setAtRoot(true);
+    setTyping(false);
   };
 
   const pick = (opt: ChatOption) => {
@@ -51,15 +72,18 @@ export default function ChatWidget() {
       document.querySelector(opt.href)?.scrollIntoView({ behavior: "smooth" });
       return;
     }
-    if (!opt.to) return;
+    if (!opt.to || typing) return;
     const node = CHAT_NODES[opt.to];
     setMessages((m) => [...m, { from: "user", lines: [opt.label] }]);
+    setOptions([]);
     setAtRoot(false);
-    // brief "typing" beat before the scripted answer
+    setTyping(true);
+    // a believable typing beat before the scripted answer
     setTimeout(() => {
+      setTyping(false);
       setMessages((m) => [...m, { from: "bot", lines: node.answer }]);
       setOptions(node.options);
-    }, 320);
+    }, 700);
   };
 
   return (
@@ -68,31 +92,51 @@ export default function ChatWidget() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        aria-label="Open chat"
-        className="fixed bottom-5 right-5 z-[60] flex items-center gap-2.5 rounded-full border border-volt/40 bg-[#0b0b0d]/85 py-2.5 pl-3 pr-4 backdrop-blur-md transition-transform duration-300 hover:-translate-y-0.5 sm:bottom-6 sm:right-6"
-        style={{ boxShadow: "0 12px 40px -12px rgba(0,0,0,0.7)" }}
+        aria-label={open ? "Close chat" : "Open chat"}
+        aria-expanded={open}
+        data-open={open}
+        className="chat-launcher group fixed bottom-5 right-5 z-[60] flex items-center gap-2.5 rounded-full border border-volt/40 bg-[#0b0b0d]/90 py-2.5 pl-3.5 pr-4.5 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-volt/70 hover:shadow-[0_0_32px_-8px_rgba(230,255,75,0.45)] sm:bottom-6 sm:right-6"
+        style={{ boxShadow: "0 12px 40px -12px rgba(0,0,0,0.75)" }}
       >
-        <span className="relative flex h-6 w-6 items-center justify-center">
-          <span className="absolute inline-flex h-3 w-3 animate-ping rounded-full bg-volt opacity-60" />
-          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-volt" />
+        <span className="relative flex items-center justify-center">
+          <XMark size={16} />
+          {/* volt sparks emitting from the mark on hover */}
+          <span className="chat-orbit" aria-hidden>
+            <span style={{ ["--ex" as string]: "-20px", ["--ey" as string]: "-14px", ["--ed" as string]: "0s" }} />
+            <span style={{ ["--ex" as string]: "18px", ["--ey" as string]: "-18px", ["--ed" as string]: "0.25s" }} />
+            <span style={{ ["--ex" as string]: "-16px", ["--ey" as string]: "14px", ["--ed" as string]: "0.5s" }} />
+            <span style={{ ["--ex" as string]: "22px", ["--ey" as string]: "10px", ["--ed" as string]: "0.75s" }} />
+            <span style={{ ["--ex" as string]: "0px", ["--ey" as string]: "-22px", ["--ed" as string]: "1s" }} />
+            <span style={{ ["--ex" as string]: "6px", ["--ey" as string]: "20px", ["--ed" as string]: "1.2s" }} />
+          </span>
         </span>
-        <span className="mono text-[12px] font-medium text-white">{open ? "Close" : "Ask me anything"}</span>
+        <span className="mono text-[12px] font-medium text-white">{open ? "Close" : "Ask us anything"}</span>
       </button>
 
       {/* panel */}
       <div
-        className={`fixed bottom-20 right-4 z-[60] w-[min(400px,calc(100vw-2rem))] origin-bottom-right transition-all duration-300 sm:bottom-24 sm:right-6 ${
-          open ? "pointer-events-auto scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"
+        className={`fixed bottom-20 right-4 z-[60] w-[min(400px,calc(100vw-2rem))] origin-bottom-right transition-all duration-300 ease-[cubic-bezier(0.16,0.84,0.28,1)] sm:bottom-[5.5rem] sm:right-6 ${
+          open ? "pointer-events-auto translate-y-0 scale-100 opacity-100" : "pointer-events-none translate-y-3 scale-[0.96] opacity-0"
         }`}
+        role="dialog"
+        aria-label="Codexterity live session"
       >
-        <div className="panel flex max-h-[70vh] flex-col overflow-hidden" style={{ boxShadow: "0 30px 80px -20px rgba(0,0,0,0.8)" }}>
+        <div
+          className="flex max-h-[70vh] flex-col overflow-hidden rounded-[18px] border border-volt/35 bg-[#0b0b0d]/95 backdrop-blur-xl"
+          style={{ boxShadow: "0 30px 80px -20px rgba(0,0,0,0.85)" }}
+        >
           {/* header */}
           <div className="flex items-center justify-between border-b border-line px-4 py-3">
-            <div className="mono flex items-center gap-2 text-[12px] tracking-wider text-volt">
-              <span className="h-1.5 w-1.5 rounded-full bg-volt" />
-              CODEXTERITY · LIVE SESSION
+            <div className="mono flex items-center gap-2.5 text-[12px] tracking-[0.14em] text-volt">
+              <XMark size={13} />
+              CODEXTERITY LIVE SESSION
             </div>
-            <button type="button" onClick={() => setOpen(false)} aria-label="Close chat" className="text-grey-2 transition-colors hover:text-white">
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Close chat"
+              className="text-grey-2 transition-colors hover:text-white"
+            >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
               </svg>
@@ -100,12 +144,14 @@ export default function ChatWidget() {
           </div>
 
           {/* messages */}
-          <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-4">
+          <div ref={scrollRef} data-lenis-prevent className="flex-1 space-y-3 overflow-y-auto p-4">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.from === "user" ? "justify-end" : "justify-start"}`}>
                 <div
                   className={`max-w-[85%] space-y-2 rounded-2xl px-4 py-3 text-[14px] leading-relaxed ${
-                    m.from === "user" ? "bg-volt font-medium text-[#0a0a08]" : "bg-white/[0.04] text-grey-2"
+                    m.from === "user"
+                      ? "rounded-br-md bg-volt font-medium text-[#0a0a08]"
+                      : "rounded-bl-md bg-white/[0.05] text-grey-2"
                   }`}
                 >
                   {m.lines.map((l, j) => (
@@ -116,6 +162,15 @@ export default function ChatWidget() {
                 </div>
               </div>
             ))}
+            {typing && (
+              <div className="flex justify-start">
+                <div className="flex items-center gap-1 rounded-2xl rounded-bl-md bg-white/[0.05] px-4 py-3.5 text-volt">
+                  <span className="typing-dot" />
+                  <span className="typing-dot" />
+                  <span className="typing-dot" />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* options */}
@@ -130,7 +185,7 @@ export default function ChatWidget() {
                 {o.label}
               </button>
             ))}
-            {!atRoot && (
+            {!atRoot && !typing && (
               <button
                 type="button"
                 onClick={reset}

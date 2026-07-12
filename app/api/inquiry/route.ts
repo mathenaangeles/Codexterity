@@ -125,7 +125,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error("[inquiry] send failed:", err);
     return NextResponse.json(
-      { error: "Couldn't send right now — please email hello@codexterity.ai directly." },
+      { error: "Couldn't send right now. Please email hello@codexterity.ai directly." },
       { status: 502 },
     );
   }

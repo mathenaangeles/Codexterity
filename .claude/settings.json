@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/mathena/Documents/GitHub/Codexterity/public/logo.png)",
+      "Bash(sips -c 82 56 --cropOffset 0 179 /Users/mathena/Documents/GitHub/Codexterity/public/logo.png --out xfinal-a.png)",
+      "Bash(sips -c 82 60 --cropOffset 0 176 /Users/mathena/Documents/GitHub/Codexterity/public/logo.png --out xfinal-b.png)",
+      "Bash(sips -c 82 50 --cropOffset 0 184 /Users/mathena/Documents/GitHub/Codexterity/public/logo.png --out xfinal-c.png)",
+      "Bash(sips -c 82 46 --cropOffset 0 187 /Users/mathena/Documents/GitHub/Codexterity/public/logo.png --out xfinal-d.png)",
+      "Bash(sips -z 328 1728 /Users/mathena/Documents/GitHub/Codexterity/public/logo.png --out logo4x.png)",
+      "Bash(sips -c 328 400 --cropOffset 0 600 logo4x.png --out logo4x-mid.png)",
+      "Bash(sips -c 192 196 --cropOffset 88 722 logo4x.png --out xmark.png)",
+      "Bash(sips -g pixelWidth -g pixelHeight xmark.png)",
+      "Bash(pkill -f \"next dev\")"
+    ]
+  }
+}

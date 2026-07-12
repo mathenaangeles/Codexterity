@@ -11,26 +11,25 @@ const metrics = [
 const principles = [
   {
     title: "Execution first",
-    body: "You get working software, not a slide deck. Every engagement ends in something live and measurable.",
+    body: "Every engagement ends in something live and measurable, never a deck.",
   },
   {
     title: "Practical AI",
-    body: "We use AI where it earns its place and leave it out where it does not. No gimmicks, no hype.",
+    body: "AI where it earns its place, left out where it doesn't. No hype.",
   },
   {
     title: "Owned by you",
-    body: "Clear handoff and docs a founder can actually read. No lock in, no in-house dev team required.",
+    body: "Docs a founder can read, no lock-in, no dev team required.",
   },
 ];
 
 export default function Results() {
   return (
     <section id="results" className="relative overflow-hidden py-24 sm:py-32">
-      <div className="section-grid section-grid-fade" aria-hidden />
-      <div className="glow glow-aqua right-[-8%] top-[10%] h-[380px] w-[380px]" aria-hidden />
+      <div data-parallax="0.18" className="glow glow-aqua right-[-8%] top-[10%] h-[380px] w-[380px]" aria-hidden />
 
       <div className="relative z-10 mx-auto max-w-[1240px] px-5 sm:px-8">
-        <Reveal className="max-w-[54ch]">
+        <Reveal>
           <span className="eyebrow eyebrow-line">Proof it works</span>
           <h2 className="mt-5 font-display text-[clamp(2rem,4.5vw,3.4rem)] text-white">
             <RevealText>Numbers that show up<br />where it counts.</RevealText>

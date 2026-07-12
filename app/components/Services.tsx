@@ -1,71 +1,170 @@
+"use client";
+
+import { useState } from "react";
 import Reveal from "./Reveal";
 import RevealText from "./RevealText";
-import Icon from "./Icon";
 import Button from "./Button";
 import { SERVICES } from "../lib/data";
+import {
+  Frame,
+  AgentVignette,
+  WorkflowVignette,
+  SupportVignette,
+  WebVignette,
+  LeadsVignette,
+  AnalyticsVignette,
+} from "./vignettes";
+
+/**
+ * "What we build" — the single services section. Each of the six services is
+ * a selectable row (click floods it volt, cloudstudio-style) and drives the
+ * sticky demo panel: a looping mini-app that shows the actual deliverable.
+ */
+
+const DEMOS: Record<string, { hook: string; outcome: string; accent: string; vignette: React.ReactNode }> = {
+  "ai-agents": {
+    hook: "Repetitive tasks handled while you sleep.",
+    outcome: "An agent that reads, decides, and acts across your tools. The queue is clear before you sit down.",
+    accent: "rgba(230,255,75,0.26)",
+    vignette: <AgentVignette />,
+  },
+  "workflow-automation": {
+    hook: "Your tools, finally talking to each other.",
+    outcome: "One trigger runs the whole chain. Order in, invoice out, team notified, sheet updated. Zero copy-paste.",
+    accent: "rgba(111,121,255,0.34)",
+    vignette: <WorkflowVignette />,
+  },
+  "chatbots-voice": {
+    hook: "Every customer question answered in seconds.",
+    outcome: "A trained assistant on your site, WhatsApp, or phone that answers instantly, day and night, and escalates only the tricky ones.",
+    accent: "rgba(230,255,75,0.22)",
+    vignette: <SupportVignette />,
+  },
+  "web-development": {
+    hook: "A website that sells while you work.",
+    outcome: "Fast, built to rank on Google, and designed to turn visitors into booked calls, not just traffic.",
+    accent: "rgba(55,217,212,0.28)",
+    vignette: <WebVignette />,
+  },
+  "crm-sales": {
+    hook: "No lead goes cold again.",
+    outcome: "Every inquiry gets an instant reply, a score, and a booked call before your competitors open the email.",
+    accent: "rgba(111,121,255,0.3)",
+    vignette: <LeadsVignette />,
+  },
+  "dashboards-bi": {
+    hook: "Every number that matters, on one screen.",
+    outcome: "A live dashboard you can ask questions in plain English. The Monday report writes itself.",
+    accent: "rgba(55,217,212,0.3)",
+    vignette: <AnalyticsVignette />,
+  },
+};
 
 export default function Services() {
+  const [active, setActive] = useState(0);
+
   return (
     <section id="services" className="relative overflow-hidden py-24 sm:py-32">
-      <div className="section-grid section-grid-fade" aria-hidden />
-      <div className="glow glow-cobalt left-[-10%] top-[20%] h-[440px] w-[440px]" aria-hidden />
+      {/* #uses kept as an anchor alias for old links */}
+      <span id="uses" className="absolute -top-24" aria-hidden />
+      <div data-parallax="0.2" className="glow glow-cobalt left-[-10%] top-[20%] h-[440px] w-[440px]" aria-hidden />
 
-      <div className="relative z-10 mx-auto max-w-[1160px] px-5 sm:px-6">
-        <Reveal className="max-w-[52ch]">
+      <div className="relative z-10 mx-auto max-w-[1240px] px-5 sm:px-8">
+        <Reveal>
           <span className="eyebrow eyebrow-line">What we build</span>
-          <h2 className="mt-5 font-display text-[clamp(2rem,4.5vw,3.4rem)] text-white">
-            <RevealText>Ten ways to get your<br />time back.</RevealText>
+          <h2 className="mt-5 max-w-[16ch] font-display text-[clamp(2rem,4.5vw,3.4rem)] text-white">
+            <RevealText>6 ways to get your time back.</RevealText>
           </h2>
-          <p className="mt-5 text-[17px] leading-relaxed text-grey-2">
-            Pick a single fix or a full system. We handle the automation, the data, and the
-            build, then hand you something you can run without us.
-          </p>
         </Reveal>
 
-        {/* Boxy grid — quiet until touched */}
-        <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-[26px] border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((service, i) => (
-            <Reveal
-              key={service.id}
-              delay={i % 3}
-              className="group relative bg-bg p-7 transition-colors duration-500 hover:bg-panel"
-            >
-              {/* hover accent line */}
-              <span className="absolute inset-x-0 top-0 h-px scale-x-0 bg-gradient-to-r from-transparent via-aqua to-transparent transition-transform duration-500 group-hover:scale-x-100" />
-              <div className="flex items-start justify-between">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-line bg-panel-2 text-white transition-all duration-500 group-hover:border-aqua/40 group-hover:text-aqua group-hover:shadow-[0_0_28px_-8px_rgba(55,217,212,0.6)]">
-                  <Icon name={service.icon} className="h-[22px] w-[22px]" />
-                </div>
-                <span className="mono text-[11px] text-grey-3">{String(i + 1).padStart(2, "0")}</span>
-              </div>
-              <h3 className="mt-5 text-[18px] font-semibold tracking-tight text-white">
-                {service.title}
-              </h3>
-              <p className="mt-2 text-[14px] leading-relaxed text-grey">{service.blurb}</p>
-            </Reveal>
-          ))}
+        <div className="mt-14 grid gap-10 lg:grid-cols-[1fr_1fr]">
+          {/* service rows: the ACTIVE one floods volt */}
+          <div className="flex flex-col">
+            {SERVICES.map((s, i) => {
+              const demo = DEMOS[s.id];
+              const on = active === i;
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => setActive(i)}
+                  onFocus={() => setActive(i)}
+                  data-active={on}
+                  data-cursor="hover"
+                  aria-pressed={on}
+                  className="sweep-row group grid grid-cols-[auto_1fr_auto] items-center gap-5 border-b border-line px-4 py-[1.35rem] text-left first:border-t sm:px-5"
+                >
+                  <span className="sweep-fill" aria-hidden />
+                  <span className={`relative z-10 text-[12px] font-semibold transition-colors duration-300 ${on ? "text-[#0a0a08]/60" : "text-grey-3"}`}>
+                    0{i + 1}
+                  </span>
+                  <span className="relative z-10">
+                    <span
+                      className={`block font-display text-[clamp(1.3rem,2.3vw,1.9rem)] font-bold leading-tight transition-colors duration-300 ${
+                        on ? "text-[#0a0a08]" : "text-grey-2 group-hover:text-white"
+                      }`}
+                    >
+                      {s.title}
+                    </span>
+                    <span className={`mt-0.5 block text-[13px] transition-colors duration-300 ${on ? "text-[#0a0a08]/70" : "text-grey"}`}>
+                      {demo.hook}
+                    </span>
+                  </span>
+                  <span
+                    className={`relative z-10 flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-300 ${
+                      on ? "translate-x-0 border-[#0a0a08]/40 text-[#0a0a08] opacity-100" : "-translate-x-2 border-white/15 text-white opacity-0 group-hover:translate-x-0 group-hover:opacity-60"
+                    }`}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8h9M8.5 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
 
-          {/* CTA cell fills the remaining grid track */}
-          <Reveal
-            delay={1}
-            className="group relative flex flex-col justify-between bg-panel p-7 sm:col-span-2 lg:col-span-2"
-          >
-            <span className="section-dots opacity-60" aria-hidden />
-            <div className="relative z-10">
-              <span className="eyebrow text-volt">Something else?</span>
-              <h3 className="mt-4 max-w-[24ch] font-display text-[clamp(1.4rem,2.4vw,2rem)] text-white">
-                Not sure what you need? That&apos;s the normal way to start.
-              </h3>
-              <p className="mt-3 max-w-[46ch] text-[14px] leading-relaxed text-grey">
-                Tell us the task that keeps landing on your plate. We&apos;ll tell you whether it&apos;s
-                worth automating, and exactly how.
-              </p>
+          {/* live demo panel */}
+          <Reveal delay={1} className="lg:sticky lg:top-24 lg:self-start">
+            <div className="panel overflow-hidden">
+              <div className="relative aspect-[4/3] max-h-[440px] w-full">
+                {SERVICES.map((s, i) => {
+                  const demo = DEMOS[s.id];
+                  return (
+                    <div
+                      key={s.id}
+                      className={`absolute inset-0 transition-opacity duration-300 ${active === i ? "opacity-100" : "pointer-events-none opacity-0"}`}
+                      aria-hidden={active !== i}
+                    >
+                      <Frame label={s.title} accent={demo.accent}>
+                        {demo.vignette}
+                      </Frame>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="border-t border-line p-5">
+                <p className="text-[15px] leading-relaxed text-grey-2">{DEMOS[SERVICES[active].id].outcome}</p>
+              </div>
             </div>
-            <Button href="#package" variant="primary" className="relative z-10 mt-6 w-fit">
-              Build a package
-            </Button>
           </Reveal>
         </div>
+
+        {/* catch-all CTA */}
+        <Reveal delay={1} className="relative mt-6 overflow-hidden rounded-[22px] border border-line bg-panel">
+          <span className="section-dots opacity-60" aria-hidden />
+          <div className="relative z-10 flex flex-col justify-between gap-6 p-7 sm:flex-row sm:items-center sm:p-8">
+            <div>
+              <span className="eyebrow text-volt">Something else?</span>
+              <h3 className="mt-3 max-w-[28ch] font-display text-[clamp(1.4rem,2.4vw,2rem)] text-white">
+                If you do it more than twice a week, it can probably run itself.
+              </h3>
+            </div>
+            <Button href="#package" variant="primary" className="w-fit shrink-0">
+              Build a package
+            </Button>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

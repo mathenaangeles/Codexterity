@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Reveal from "./Reveal";
+import { BlueprintCorners } from "./Button";
 import Icon from "./Icon";
 import { SERVICES, BUDGETS, TIMELINES } from "../lib/data";
 import { useInquiry } from "./InquiryContext";
@@ -61,8 +62,8 @@ export default function PackageBuilder() {
   return (
     <section id="package" className="relative overflow-hidden py-24 sm:py-32">
       <div className="section-dots" aria-hidden />
-      <div className="glow glow-volt right-[-6%] top-[8%] h-[380px] w-[380px]" aria-hidden />
-      <div className="glow glow-indigo left-[-6%] bottom-[6%] h-[360px] w-[420px]" aria-hidden />
+      <div data-parallax="0.16" className="glow glow-volt right-[-6%] top-[8%] h-[380px] w-[380px]" aria-hidden />
+      <div data-parallax="-0.14" className="glow glow-indigo left-[-6%] bottom-[6%] h-[360px] w-[420px]" aria-hidden />
 
       <div className="relative z-10 mx-auto max-w-[1000px] px-5 sm:px-8">
         <Reveal className="flex flex-col items-center text-center">
@@ -70,9 +71,8 @@ export default function PackageBuilder() {
           <h2 className="mx-auto mt-5 max-w-[18ch] font-display text-[clamp(2rem,4.5vw,3.4rem)] text-white">
             What do you need built?
           </h2>
-          <p className="mx-auto mt-5 max-w-[50ch] text-[17px] leading-relaxed text-grey-2">
-            Tap what&apos;s slowing you down, add a line of context, and send. We come back with a
-            straight answer and a scope, usually within one business day.
+          <p className="mx-auto mt-5 max-w-[44ch] text-[17px] leading-relaxed text-grey-2">
+            Tap what&apos;s slowing you down, add one line, send. Scope back within a business day.
           </p>
         </Reveal>
 
@@ -174,8 +174,9 @@ export default function PackageBuilder() {
                     {budget ? ` · ${budget}` : ""}
                     {timeline ? ` · ${timeline}` : ""}
                   </p>
-                  <button type="submit" disabled={status === "submitting"} className="cta cta-primary w-full disabled:opacity-70 sm:w-auto">
-                    <span className="cta-label">{status === "submitting" ? "Sending" : "Send my package"}</span>
+                  <button type="submit" disabled={status === "submitting"} className="cta cta-primary w-full justify-center disabled:opacity-70 sm:w-auto">
+                    <BlueprintCorners />
+                    <span>{status === "submitting" ? "Sending" : "Send my package"}</span>
                     <span className="cta-arrow" aria-hidden>
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M3 8h9M8.5 4l4 4-4 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />

@@ -58,40 +58,11 @@ export default function Icon({ name, className }: IconProps) {
         <path d="M15.5 9.5h5M15.5 13h5M15.5 16.5h3" />
       </>
     ),
-    // magnet = lead gen
-    leads: (
-      <>
-        <path d="M6 4.5v7a6 6 0 0 0 12 0v-7" />
-        <path d="M6 4.5h4v7M18 4.5h-4v7" />
-      </>
-    ),
-    // cart = ecommerce
-    ecommerce: (
-      <>
-        <path d="M3.5 4.5h2l1.7 9.5h9.3l1.5-7H7" />
-        <circle cx="9.5" cy="18.5" r="1.3" />
-        <circle cx="16.5" cy="18.5" r="1.3" />
-      </>
-    ),
     // bar chart = dashboards
     dashboards: (
       <>
         <path d="M4 4.5v15h16" />
         <path d="M8 16v-3M12 16V9M16 16v-6" />
-      </>
-    ),
-    // brackets/plug = api
-    api: (
-      <>
-        <path d="M9 7 5 12l4 5M15 7l4 5-4 5" />
-        <path d="M13.5 6.5 10.5 17.5" />
-      </>
-    ),
-    // terminal = custom software
-    software: (
-      <>
-        <rect x="3.5" y="5" width="17" height="14" rx="2" />
-        <path d="M7 10l2.5 2L7 14M12.5 14.5H16" />
       </>
     ),
   };

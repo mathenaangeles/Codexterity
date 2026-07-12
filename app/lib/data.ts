@@ -1,6 +1,9 @@
 // Shared source of truth for services — consumed by the Services grid, the
-// PackageBuilder chips, and the Contact form's service selector, so the copy
-// stays consistent everywhere.
+// PackageBuilder chips, and the JSON-LD structured data, so copy and SEO
+// stay consistent everywhere.
+//
+// Deliberately six core, top-line offers (the things people actually search
+// for, deliverable by a small senior team) instead of a ten-item menu.
 
 export type IconName =
   | "automation"
@@ -8,80 +11,65 @@ export type IconName =
   | "chatbot"
   | "workflow"
   | "crm"
-  | "leads"
-  | "ecommerce"
-  | "dashboards"
-  | "api"
-  | "software";
+  | "dashboards";
 
 export type Service = {
   id: string;
   title: string;
   icon: IconName;
   blurb: string;
+  /** SEO-oriented keyword line, used in structured data. */
+  keyword: string;
 };
 
-// Core services, verbatim from the brand book.
 export const SERVICES: Service[] = [
   {
-    id: "ai-automation",
-    title: "AI Automation",
+    id: "ai-agents",
+    title: "AI Agents",
     icon: "automation",
-    blurb: "Put the repetitive judgment calls on autopilot: triage, replies, routing, and follow-ups.",
-  },
-  {
-    id: "website-development",
-    title: "Website Development",
-    icon: "web",
-    blurb: "Conversion-focused sites that load fast, read clearly, and turn visitors into leads.",
-  },
-  {
-    id: "ai-chatbots",
-    title: "AI Chatbots",
-    icon: "chatbot",
-    blurb: "The assistant that answers your leads at 2am, trained on how your business actually works.",
+    blurb:
+      "Deploy AI agents that handle repetitive tasks, answer questions, complete workflows, and work alongside your team 24/7.",
+    keyword: "AI agents for business",
   },
   {
     id: "workflow-automation",
     title: "Workflow Automation",
     icon: "workflow",
-    blurb: "Connect the tools you already use so hand-offs happen without anyone touching them.",
+    blurb:
+      "Automate manual business processes by connecting your CRM, email, spreadsheets, accounting software, and other business tools.",
+    keyword: "workflow automation and integrations",
   },
   {
-    id: "crm-setup",
-    title: "CRM Setup",
+    id: "chatbots-voice",
+    title: "Chatbots & Voice Agents",
+    icon: "chatbot",
+    blurb:
+      "Capture leads, answer customer questions, qualify prospects, and book appointments through your website, WhatsApp, Messenger, Viber, or phone.",
+    keyword: "AI chatbots and voice agents",
+  },
+  {
+    id: "web-development",
+    title: "Web Design & Development",
+    icon: "web",
+    blurb:
+      "Launch high-converting websites built for SEO, AI search, Google AI Overviews, and lead generation from day one.",
+    keyword: "high-converting web design and development",
+  },
+  {
+    id: "crm-sales",
+    title: "CRM & Sales Automation",
     icon: "crm",
-    blurb: "A pipeline your team will actually use, with clean stages, automations, and no data entry.",
+    blurb:
+      "Automatically capture, score, nurture, and follow up with every lead so your sales pipeline keeps moving without manual work.",
+    keyword: "CRM and sales automation",
   },
   {
-    id: "lead-generation",
-    title: "Lead Generation",
-    icon: "leads",
-    blurb: "Systems that find, capture, and nurture the right leads while you do the work you love.",
-  },
-  {
-    id: "ecommerce-automation",
-    title: "E-Commerce Automation",
-    icon: "ecommerce",
-    blurb: "Orders, inventory, and post-purchase flows that run themselves across your storefront.",
-  },
-  {
-    id: "dashboards-reporting",
-    title: "Dashboards & Reporting",
+    id: "dashboards-bi",
+    title: "Dashboards & Business Intelligence",
     icon: "dashboards",
-    blurb: "One screen for the numbers that matter, live and accurate and built to decide from.",
-  },
-  {
-    id: "api-integrations",
-    title: "API Integrations",
-    icon: "api",
-    blurb: "Make two systems that were never meant to talk to each other work as one.",
-  },
-  {
-    id: "custom-software",
-    title: "Custom Software",
-    icon: "software",
-    blurb: "When off-the-shelf can't do it, we build the exact tool your operation needs.",
+    blurb:
+      "Turn scattered business data into real-time dashboards and reports that help you make faster, smarter decisions.",
+    keyword: "business intelligence dashboards",
   },
 ];
 

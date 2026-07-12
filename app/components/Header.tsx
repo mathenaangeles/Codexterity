@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Button from "./Button";
 
 type NavItem = { name: string; href: string; index: string };
 
 const navItems: NavItem[] = [
   { name: "Services", href: "#services", index: "01" },
-  { name: "Use cases", href: "#uses", index: "02" },
-  { name: "Package", href: "#package", index: "03" },
-  { name: "Process", href: "#process", index: "04" },
+  { name: "Process", href: "#process", index: "02" },
+  { name: "Results", href: "#results", index: "03" },
+  { name: "Package", href: "#package", index: "04" },
 ];
 
 export default function Header() {
@@ -18,10 +19,16 @@ export default function Header() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
-    onScroll();
+    // sync initial state after paint (avoids setState directly in the effect)
+    const raf = requestAnimationFrame(() => {
+      onScroll();
+      if (window.location.hash === "#menu") setMenuOpen(true);
+    });
     window.addEventListener("scroll", onScroll, { passive: true });
-    if (window.location.hash === "#menu") setMenuOpen(true);
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -42,7 +49,7 @@ export default function Header() {
         }`}
       >
         <a href="#top" aria-label="Codexterity home" className="flex items-center">
-          <Image src="/logo.png" alt="Codexterity" width={448} height={98} priority className="h-[20px] w-auto" />
+          <Image src="/logo.png" alt="Codexterity" width={432} height={82} priority className="h-[27px] w-auto" />
         </a>
 
         <nav className="hidden items-center gap-1 md:flex">
@@ -52,18 +59,21 @@ export default function Header() {
               href={item.href}
               className="rounded-full px-4 py-2 text-[14px] text-grey-2 transition-colors duration-300 hover:bg-white/5 hover:text-white"
             >
-              {item.name}
+              <span className="roll">
+                <span className="roll-inner" data-text={item.name}>
+                  {item.name}
+                </span>
+              </span>
             </a>
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <a
-            href="#package"
-            className="hidden items-center gap-2 rounded-full bg-volt px-5 py-2 text-[14px] font-semibold text-[#0a0a08] transition-all duration-300 hover:bg-[#f0ff6e] sm:inline-flex"
-          >
-            Start a project
-          </a>
+        <div className="flex items-center gap-3">
+          <span className="hidden sm:inline-flex">
+            <Button href="#package" variant="primary" size="sm">
+              Start a project
+            </Button>
+          </span>
           <button
             type="button"
             aria-label="Toggle menu"
@@ -94,7 +104,6 @@ function FullScreenMenu({
   onClose: () => void;
   items: NavItem[];
 }) {
-  const all = [...items, { name: "Start a project", href: "#package", index: "05" }];
   return (
     <div
       className={`fixed inset-0 z-40 transition-all duration-500 ${
@@ -106,15 +115,16 @@ function FullScreenMenu({
       <div className="section-grid section-grid-fade" aria-hidden />
       <div className="glow glow-indigo left-1/2 top-1/2 h-[420px] w-[520px] -translate-x-1/2 -translate-y-1/2" aria-hidden />
 
-      {/* scroll container: centers when short, scrolls when tall (never clips) */}
-      <div className="relative z-10 h-full overflow-y-auto">
-        <nav className="mx-auto flex min-h-full max-w-[1120px] flex-col justify-center px-6 pb-12 pt-24">
-          {all.map((item, i) => (
+      {/* scroll container: centers when short, scrolls when tall (never clips).
+          data-lenis-prevent hands wheel events back to this box. */}
+      <div data-lenis-prevent className="relative z-10 h-full overflow-y-auto">
+        <nav className="mx-auto flex min-h-full max-w-[1120px] flex-col justify-center px-6 py-24">
+          {items.map((item, i) => (
             <a
               key={item.name}
               href={item.href}
               onClick={onClose}
-              className="group flex items-center justify-between border-b border-white/10 py-4 sm:py-5"
+              className="group relative flex items-center justify-between border-b border-white/10 px-1 py-4 sm:py-5"
               style={{
                 transitionDelay: open ? `${120 + i * 55}ms` : "0ms",
                 transform: open ? "translateY(0)" : "translateY(22px)",
@@ -122,15 +132,16 @@ function FullScreenMenu({
                 transition: "transform 0.6s cubic-bezier(0.16,0.84,0.28,1), opacity 0.6s",
               }}
             >
+              <span className="menu-rule" aria-hidden />
               <div className="flex items-baseline gap-5 sm:gap-8">
-                <span className="mono text-[13px] text-grey-3 transition-colors group-hover:text-aqua">
+                <span className="mono text-[13px] text-grey-3 transition-colors duration-300 group-hover:text-volt">
                   {item.index}
                 </span>
-                <span className="font-display text-[clamp(2rem,7vw,4rem)] font-extrabold leading-none text-grey-2 transition-colors duration-300 group-hover:text-white">
+                <span className="menu-label font-display text-[clamp(2rem,7vw,4rem)] font-extrabold leading-none">
                   {item.name}
                 </span>
               </div>
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 text-white opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 sm:-translate-x-2">
+              <span className="flex h-11 w-11 shrink-0 -translate-x-3 -rotate-45 items-center justify-center rounded-full border border-white/15 text-white opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:rotate-0 group-hover:border-white/40 group-hover:opacity-100">
                 <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
                   <path d="M3 8h9M8.5 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -138,20 +149,30 @@ function FullScreenMenu({
             </a>
           ))}
 
+          {/* menu footer: CTA on one side, contact meta on the other */}
           <div
-            className="mt-8 flex flex-col gap-2 text-grey"
+            className="mt-12 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between"
             style={{
-              transitionDelay: open ? "460ms" : "0ms",
+              transitionDelay: open ? "420ms" : "0ms",
               opacity: open ? 1 : 0,
               transition: "opacity 0.6s",
             }}
           >
-            <a href="mailto:hello@codexterity.ai" className="mono text-[13px] transition-colors hover:text-aqua">
-              hello@codexterity.ai
-            </a>
-            <span className="mono text-[12px] text-grey-3">
-              <span className="text-aqua">●</span> available for new work
+            <span onClick={onClose}>
+              <Button href="#package">Start a project</Button>
             </span>
+            <div className="flex flex-col gap-2 sm:items-end">
+              <a href="mailto:hello@codexterity.ai" className="mono text-[13px] text-grey-2 transition-colors hover:text-aqua">
+                hello@codexterity.ai
+              </a>
+              <span className="mono inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.15em] text-grey-2">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-volt opacity-50" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-volt" />
+                </span>
+                Taking new projects
+              </span>
+            </div>
           </div>
         </nav>
       </div>

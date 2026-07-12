@@ -12,28 +12,28 @@ export type ChatNode = {
 };
 
 export const CHAT_INTRO =
-  "You found the talk button. I'm the site, and I answer fast. Pick a question below.";
+  "Oh, you found the talk button. I'm the site, and I answer fast. Pick a question below.";
 
 export const CHAT_ROOT_OPTIONS: ChatOption[] = [
   { label: "What do you build?", to: "build" },
-  { label: "Pricing & engagements", to: "pricing" },
+  { label: "How much does it cost?", to: "pricing" },
   { label: "How fast can you ship?", to: "speed" },
   { label: "Do I own it?", to: "ownership" },
-  { label: "Book a call", href: "#package" },
+  { label: "Book a call.", href: "#package" },
 ];
 
 export const CHAT_NODES: Record<string, ChatNode> = {
   build: {
     id: "build",
     answer: [
-      "Three buckets, all shipped to production:",
-      "**Agents & applied AI** — support agents, RAG on your docs, workflow bots.",
-      "**Systems & automation** — CRM, dashboards, lead routing, API glue.",
-      "**Websites** — conversion-focused sites and the tooling behind them.",
+      "Three things, all shipped to production:",
+      "**AI chatbots and agents** that answer your customers and work your docs.",
+      "**Automations and systems**: CRM, dashboards, lead routing, integrations.",
+      "**Websites** built to rank and convert.",
     ],
     options: [
       { label: "How fast can you ship?", to: "speed" },
-      { label: "Show me real work", href: "#work" },
+      { label: "Show me what it looks like", href: "#services" },
       { label: "Build my package", href: "#package" },
     ],
   },
@@ -41,7 +41,7 @@ export const CHAT_NODES: Record<string, ChatNode> = {
     id: "pricing",
     answer: [
       "Simple, and told to your face:",
-      "**Fixed price** for scoped projects. **Retainer** for the long game. **Advisory** when you need a brain, not a build.",
+      "**Fixed price** for scoped projects. **Retainer** for ongoing work. **Advisory** when you need a brain, not a build.",
       "You get a scope within one business day of a short call. No surprise invoices.",
     ],
     options: [
@@ -67,7 +67,7 @@ export const CHAT_NODES: Record<string, ChatNode> = {
       "You do not need an in-house engineering team to keep it running. It's yours to keep.",
     ],
     options: [
-      { label: "Pricing & engagements", to: "pricing" },
+      { label: "How much does it cost?", to: "pricing" },
       { label: "Build my package", href: "#package" },
     ],
   },

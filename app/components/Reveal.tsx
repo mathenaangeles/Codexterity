@@ -31,12 +31,8 @@ export default function Reveal({
     const el = ref.current;
     if (!el) return;
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
-      setVisible(true);
-      return;
-    }
-
+    // Reduced-motion users still reveal via the observer — the global CSS
+    // makes the transition instant, so content simply appears in place.
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {

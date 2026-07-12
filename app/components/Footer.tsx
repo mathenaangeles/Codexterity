@@ -1,13 +1,10 @@
 import Image from "next/image";
-import Magnetic from "./Magnetic";
 import Button from "./Button";
 
 const nav = [
   { name: "Services", href: "#services" },
-  { name: "Use cases", href: "#uses" },
   { name: "Process", href: "#process" },
   { name: "Results", href: "#results" },
-  { name: "Build a package", href: "#package" },
 ];
 
 export default function Footer() {
@@ -33,32 +30,29 @@ export default function Footer() {
       />
 
       <div className="relative z-10 mx-auto max-w-[1240px] px-5 sm:px-8">
-        {/* Big CTA line */}
-        <div className="flex flex-col items-start justify-between gap-8 border-b border-white/10 pb-16 md:flex-row md:items-end">
-          <h2 className="max-w-[15ch] font-display text-[clamp(2.2rem,5vw,4rem)] text-white">
-            Ready to stop doing it{" "}
-            <span className="text-gradient">by hand?</span>
-          </h2>
-          <Magnetic className="shrink-0">
-            <Button href="#package" variant="primary">
-              Start a project
-            </Button>
-          </Magnetic>
-        </div>
-
-        <div className="mt-14 flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
+        <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div className="max-w-[34ch]">
-            <Image src="/logo.png" alt="Codexterity" width={448} height={98} className="h-7 w-auto" />
+            <Image src="/logo.png" alt="Codexterity" width={432} height={82} className="h-10 w-auto" />
             <p className="mt-5 text-[14px] leading-relaxed text-grey">
-              Practical AI and real systems for small teams. Not abstract hype, just software
+              Practical AI and real systems for small teams. We build the software
               that removes the work nobody should be doing twice.
             </p>
-            <a
-              href="mailto:hello@codexterity.ai"
-              className="mono mt-4 inline-block text-[13px] text-grey-2 transition-colors hover:text-aqua"
-            >
-              hello@codexterity.ai
-            </a>
+            <div className="mt-5 flex flex-wrap items-center gap-3.5">
+              <a
+                href="mailto:hello@codexterity.ai"
+                className="mono text-[13px] text-grey-2 transition-colors hover:text-aqua"
+              >
+                hello@codexterity.ai
+              </a>
+              <span className="h-3.5 w-px bg-white/15" aria-hidden />
+              <span className="mono inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.15em] text-grey-2">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-volt opacity-50" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-volt" />
+                </span>
+                Taking new projects
+              </span>
+            </div>
           </div>
 
           <nav className="flex flex-col gap-3">
@@ -67,21 +61,24 @@ export default function Footer() {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-[14px] text-grey-2 transition-colors hover:text-white"
+                className="w-fit text-[14px] text-grey-2 transition-colors hover:text-white"
               >
-                {item.name}
+                <span className="roll">
+                  <span className="roll-inner" data-text={item.name}>
+                    {item.name}
+                  </span>
+                </span>
               </a>
             ))}
           </nav>
         </div>
 
-        <div className="mt-16 flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center">
-          <p className="mono text-[12px] text-grey-3">
-            © {new Date().getFullYear()} Codexterity · AI &amp; Automation Consultancy
-          </p>
-          <p className="mono text-[12px] text-grey-3">
-            status <span className="text-aqua">active</span> · uptime 99.98%
-          </p>
+        <div className="mt-12">
+          <Button href="#package">Start a project</Button>
+        </div>
+
+        <div className="mt-12 border-t border-white/10 pt-6">
+          <p className="text-[13px] text-grey-3">© {new Date().getFullYear()} Codexterity</p>
         </div>
       </div>
     </footer>
