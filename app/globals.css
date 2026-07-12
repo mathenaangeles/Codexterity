@@ -1043,3 +1043,23 @@ a:hover.roll .roll-inner {
     linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) center / 11px 1.2px no-repeat,
     linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) center / 1.2px 11px no-repeat;
 }
+
+/* Vignette demos: under reduced-motion, freeze at a readable FINAL state
+   (completed) instead of their hidden start frame, without touching the
+   normal-motion visuals. */
+@media (prefers-reduced-motion: reduce) {
+  .vg-in { opacity: 1 !important; transform: none !important; }
+  .vg-bar { transform: none !important; }
+  .vg-draw { stroke-dashoffset: 0 !important; }
+  .vg-wire { transform: none !important; }
+  .vg-progress { transform: none !important; }
+  .vg-node { border-color: rgba(230, 255, 75, 0.4) !important; background: rgba(230, 255, 75, 0.05) !important; }
+  .vg-node-dot { background: var(--color-volt) !important; }
+  .vg-flip-a, .vg-typing { opacity: 0 !important; }
+  .vg-flip-b { opacity: 1 !important; transform: none !important; }
+  .vg-lead-card { transform: translateX(calc(200% + 48px)) !important; opacity: 1 !important; }
+  .vg-stage-1, .vg-stage-2 { color: var(--color-grey-2) !important; }
+  .vg-stage-3 { color: var(--color-volt) !important; }
+  .vg-check { background: var(--color-volt) !important; border-color: var(--color-volt) !important; }
+  .vg-check svg { opacity: 1 !important; transform: none !important; }
+}

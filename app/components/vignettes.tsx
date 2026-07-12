@@ -217,21 +217,25 @@ export function WorkflowVignette() {
   const week = [5, 8, 6, 9, 7, 10, 8];
   return (
     <div className="flex h-full flex-col justify-between gap-2">
-      {/* builder header: an inline timeline instead of arrow glyphs */}
-      <div className="flex items-center justify-between rounded-lg border border-white/[0.07] bg-white/[0.02] px-3 py-2">
-        <div className="flex items-center gap-1.5 text-[10.5px] font-medium text-grey-2">
-          {["New order", "invoice", "notify"].map((step, i) => (
-            <span key={step} className="flex items-center gap-1.5">
-              {i > 0 && <span className="h-px w-3 bg-white/15" aria-hidden />}
-              <span className="h-1.5 w-1.5 rounded-full bg-volt" aria-hidden />
-              {step}
+      {/* builder header: a horizontal timeline of the business steps */}
+      <div className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-3 py-2.5">
+        <div className="mb-3 flex items-center justify-between">
+          <span className="text-[10px] font-medium text-grey-3">Order fulfillment</span>
+          <span className="flex items-center gap-1.5 rounded-full bg-mint/12 px-2 py-0.5 text-[9.5px] font-bold text-mint">
+            <span className="h-1 w-1 rounded-full bg-mint" />
+            ON
+          </span>
+        </div>
+        <div className="relative flex items-start justify-between">
+          {/* rail runs between the first and last node centers */}
+          <span className="absolute left-[16.66%] right-[16.66%] top-[4px] h-[2px] rounded-full bg-gradient-to-r from-volt/40 via-volt/70 to-volt/40" aria-hidden />
+          {["New Order", "Invoice", "Notify"].map((step) => (
+            <span key={step} className="relative z-10 flex w-0 flex-1 flex-col items-center gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-full bg-volt shadow-[0_0_0_3px_#0b0b0d]" aria-hidden />
+              <span className="whitespace-nowrap text-[9.5px] font-medium text-grey-2">{step}</span>
             </span>
           ))}
         </div>
-        <span className="flex items-center gap-1.5 rounded-full bg-mint/12 px-2 py-0.5 text-[9.5px] font-bold text-mint">
-          <span className="h-1 w-1 rounded-full bg-mint" />
-          ON
-        </span>
       </div>
 
       <div className="rounded-lg border border-white/[0.07] bg-white/[0.015] p-3">
@@ -353,9 +357,9 @@ function RingGauge({ value }: { value: number }) {
 
 export function WebVignette() {
   const scores = [
-    { ring: 100, label: "Speed", sub: "1.2s load" },
-    { ring: 98, label: "SEO", sub: "#1 on Google" },
-    { ring: 100, label: "Mobile", sub: "+38% conv." },
+    { ring: 100, label: "Performance", sub: "Loads in 1.2s" },
+    { ring: 98, label: "SEO", sub: "Ranks page one" },
+    { ring: 100, label: "Accessibility", sub: "Usable by all" },
   ];
   return (
     <div className="flex h-full flex-col">
@@ -523,6 +527,9 @@ export function AnalyticsVignette() {
     { label: "Hours Saved", value: "31", delta: "in 7 days" },
   ];
   const bars = [38, 52, 44, 60, 55, 72, 66, 88];
+  // trend points (x%, y%) at each bar top for the overlaid line + markers
+  const pts = bars.map((v, i) => [(i + 0.5) * (100 / bars.length), 100 - v] as const);
+  const poly = pts.map((p) => `${p[0].toFixed(2)},${p[1].toFixed(2)}`).join(" ");
   return (
     <div className="flex h-full flex-col gap-2">
       <div className="grid grid-cols-3 gap-2">
@@ -534,30 +541,50 @@ export function AnalyticsVignette() {
           </div>
         ))}
       </div>
-      {/* clean bar chart: uniform bars, this week highlighted, growth chip */}
+      {/* bar chart with an overlaid trend line (white, so it never blends into the last bar) */}
       <div className="relative flex-1 overflow-hidden rounded-lg border border-white/[0.07] bg-white/[0.02] p-2">
         <div className="flex items-center justify-between px-1 pb-1.5">
           <span className="text-[9.5px] font-medium text-grey-2">Revenue by week</span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-mint/12 px-1.5 py-0.5 text-[9px] font-bold text-mint">
-            <svg width="8" height="8" viewBox="0 0 16 16" fill="none" aria-hidden>
-              <path d="M8 13V4M8 4 4.5 7.5M8 4l3.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            +34%
+          <span className="flex items-center gap-2.5">
+            <span className="flex items-center gap-1 text-[9px] text-grey-2">
+              <span className="h-[2px] w-3 rounded-full bg-white" />
+              Trend
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-mint/12 px-1.5 py-0.5 text-[9px] font-bold text-mint">
+              <svg width="8" height="8" viewBox="0 0 16 16" fill="none" aria-hidden>
+                <path d="M8 13V4M8 4 4.5 7.5M8 4l3.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              +34%
+            </span>
           </span>
         </div>
-        <div className="relative flex h-[calc(100%-20px)] items-end justify-between gap-1.5 px-1">
-          {bars.map((v, i) => (
+        <div className="relative h-[calc(100%-20px)]">
+          <div className="absolute inset-0 flex items-end justify-between gap-1.5 px-1">
+            {bars.map((v, i) => (
+              <span
+                key={i}
+                className="vg-bar w-full rounded-t-[3px]"
+                style={{
+                  height: `${v}%`,
+                  background: i === bars.length - 1 ? "var(--grad-brand-soft)" : "rgba(255,255,255,0.08)",
+                  ["--vd" as string]: `${0.3 + i * 0.14}s`,
+                }}
+              />
+            ))}
+          </div>
+          <span className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/10" aria-hidden />
+          {/* trend line: dark halo + white stroke, drawn on top of the bars */}
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible" aria-hidden>
+            <polyline points={poly} fill="none" stroke="rgba(8,8,10,0.75)" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+            <polyline points={poly} fill="none" stroke="#ffffff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" className="vg-draw" />
+          </svg>
+          {pts.map((p, i) => (
             <span
               key={i}
-              className="vg-bar w-full rounded-t-[3px]"
-              style={{
-                height: `${v}%`,
-                background: i === bars.length - 1 ? "var(--grad-brand-soft)" : "rgba(255,255,255,0.09)",
-                ["--vd" as string]: `${0.3 + i * 0.14}s`,
-              }}
+              className="vg-in pointer-events-none absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_0_2px_#0b0b0d]"
+              style={{ left: `${p[0]}%`, top: `${p[1]}%`, ["--vd" as string]: `${0.6 + i * 0.14}s` }}
             />
           ))}
-          <span className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/10" aria-hidden />
         </div>
       </div>
       {/* ask your data: a real chat exchange with avatars */}

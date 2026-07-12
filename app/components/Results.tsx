@@ -10,16 +10,16 @@ const metrics = [
 
 const principles = [
   {
-    title: "Execution first",
-    body: "Every engagement ends in something live and measurable, never a deck.",
+    title: "Production-Ready",
+    body: "Every solution is engineered for real-world business use and delivered ready for deployment, so your team can start seeing value in weeks instead of months.",
   },
   {
-    title: "Practical AI",
-    body: "AI where it earns its place, left out where it doesn't. No hype.",
+    title: "Outcome-Driven",
+    body: "Every recommendation is backed by a clear business case, focusing on measurable improvements in efficiency, productivity, cost savings, or customer experience.",
   },
   {
-    title: "Owned by you",
-    body: "Docs a founder can read, no lock-in, no dev team required.",
+    title: "Fully Owned",
+    body: "You own the code, workflows, and documentation, giving your team complete control today and the flexibility to grow tomorrow.",
   },
 ];
 
@@ -32,7 +32,7 @@ export default function Results() {
         <Reveal>
           <span className="eyebrow eyebrow-line">Proof it works</span>
           <h2 className="mt-5 font-display text-[clamp(2rem,4.5vw,3.4rem)] text-white">
-            <RevealText>Numbers that show up<br />where it counts.</RevealText>
+            <RevealText>Every decision is driven by business impact.</RevealText>
           </h2>
         </Reveal>
 

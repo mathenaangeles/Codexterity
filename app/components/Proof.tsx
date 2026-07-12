@@ -93,16 +93,15 @@ export default function Proof() {
                     style={hoverVars(i)}
                     title={tool.title}
                   >
-                    <svg
-                      viewBox="0 0 24 24"
-                      role="img"
-                      aria-label={tool.title}
-                      className="relative z-[3] h-6 w-6 transition-transform duration-300 group-hover:-translate-y-2 sm:h-8 sm:w-8"
-                    >
-                      <path d={tool.path} />
-                    </svg>
-                    <span className="tool-name pointer-events-none absolute bottom-2 z-[3] translate-y-1 text-[10px] font-medium tracking-wide opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 sm:bottom-3 sm:text-[10.5px]">
-                      {tool.title}
+                    {/* icon + label stay centered as one group; the label
+                       expands on hover so the icon never hits the top edge */}
+                    <span className="relative z-[3] flex flex-col items-center transition-transform duration-300 group-hover:-translate-y-1">
+                      <svg viewBox="0 0 24 24" role="img" aria-label={tool.title} className="h-6 w-6 sm:h-8 sm:w-8">
+                        <path d={tool.path} />
+                      </svg>
+                      <span className="tool-name pointer-events-none max-h-0 overflow-hidden text-[10px] font-medium leading-none tracking-wide opacity-0 transition-all duration-300 group-hover:mt-2 group-hover:max-h-4 group-hover:opacity-100 sm:text-[10.5px]">
+                        {tool.title}
+                      </span>
                     </span>
                   </div>
                 ))}
