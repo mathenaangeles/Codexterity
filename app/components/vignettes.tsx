@@ -330,36 +330,11 @@ export function SupportVignette() {
 
 /* ------------------------------------------- 4 · website building itself */
 
-function RingGauge({ value }: { value: number }) {
-  const r = 11;
-  const c = 2 * Math.PI * r;
-  const off = c * (1 - value / 100);
-  return (
-    <span className="relative flex h-8 w-8 shrink-0 items-center justify-center">
-      <svg width="32" height="32" viewBox="0 0 32 32" className="-rotate-90">
-        <circle cx="16" cy="16" r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2.5" />
-        <circle
-          cx="16"
-          cy="16"
-          r={r}
-          fill="none"
-          stroke="#7cf3b0"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeDasharray={c}
-          strokeDashoffset={off}
-        />
-      </svg>
-      <span className="absolute text-[8.5px] font-bold text-mint">{value}</span>
-    </span>
-  );
-}
-
 export function WebVignette() {
   const scores = [
-    { ring: 100, label: "Performance", sub: "Loads in 1.2s" },
-    { ring: 98, label: "SEO", sub: "Ranks page one" },
-    { ring: 100, label: "Accessibility", sub: "Usable by all" },
+    { value: 100, label: "Performance", sub: "Loads in 1.2s", delay: "3.2s" },
+    { value: 100, label: "SEO", sub: "Ranks page one", delay: "3.5s" },
+    { value: 100, label: "Accessibility", sub: "Usable by all", delay: "3.8s" },
   ];
   return (
     <div className="flex h-full flex-col">
@@ -379,7 +354,7 @@ export function WebVignette() {
         </span>
       </div>
       {/* the page assembling */}
-      <div className="relative flex-1 overflow-hidden rounded-b-lg border border-t-0 border-white/10 bg-black/30 p-3">
+      <div className="relative flex flex-1 flex-col overflow-hidden rounded-b-lg border border-t-0 border-white/10 bg-black/30 p-3">
         <div className="vg-in flex items-center justify-between" style={{ ["--vd" as string]: "0.3s" }}>
           <span className="h-2 w-12 rounded-full bg-white/25" />
           <span className="flex gap-2">
@@ -388,32 +363,47 @@ export function WebVignette() {
             <span className="h-2 w-8 rounded-full bg-white/10" />
           </span>
         </div>
-        <div className="vg-in mt-4" style={{ ["--vd" as string]: "0.9s" }}>
-          <span className="block h-3.5 w-4/5 rounded-full bg-white/30" />
-          <span className="mt-1.5 block h-3.5 w-3/5 rounded-full bg-white/30" />
-          <span className="mt-2 block h-2 w-2/3 rounded-full bg-white/[0.09]" />
+        <div className="vg-in mt-3" style={{ ["--vd" as string]: "0.9s" }}>
+          <span className="block h-3 w-4/5 rounded-full bg-white/30" />
+          <span className="mt-1.5 block h-3 w-3/5 rounded-full bg-white/30" />
         </div>
-        <span className="vg-in mt-3 inline-block rounded-md bg-volt px-4 py-1.5 text-[10px] font-bold text-black" style={{ ["--vd" as string]: "1.5s" }}>
+        <span className="vg-in mt-2.5 inline-block w-fit rounded-md bg-volt px-4 py-1.5 text-[10px] font-bold text-black" style={{ ["--vd" as string]: "1.5s" }}>
           Book a call
         </span>
-        <div className="mt-3 grid grid-cols-3 gap-2">
+        <div className="mt-2.5 grid grid-cols-3 gap-2">
           {[2.1, 2.4, 2.7].map((d) => (
             <div key={d} className="vg-in rounded-md border border-white/[0.07] bg-white/[0.02] p-2" style={{ ["--vd" as string]: `${d}s` }}>
-              <span className="block h-6 rounded bg-white/[0.06]" />
+              <span className="block h-4 rounded bg-white/[0.06]" />
               <span className="mt-1.5 block h-1.5 w-3/4 rounded-full bg-white/12" />
             </div>
           ))}
         </div>
-        {/* audit bar: ring gauges with their receipts, one glass strip */}
-        <div className="vg-in absolute bottom-3 left-3 right-3 grid grid-cols-3 divide-x divide-white/[0.08] rounded-lg border border-white/10 bg-black/60 py-2 backdrop-blur-sm" style={{ ["--vd" as string]: "3.2s" }}>
-          {scores.map((s) => (
-            <span key={s.label} className="flex items-center justify-center gap-2 px-1.5">
-              <RingGauge value={s.ring} />
-              <span className="leading-tight">
-                <span className="block text-[10px] font-semibold text-white">{s.label}</span>
-                <span className="block text-[9px] text-grey-2">{s.sub}</span>
-              </span>
+        {/* site audit: meters that draw to their score, like a live report.
+            Sits in flow at the bottom so it never covers the page above. */}
+        <div className="vg-in mt-auto space-y-1.5 rounded-lg border border-white/10 bg-black/70 px-3.5 py-2.5" style={{ ["--vd" as string]: "3s" }}>
+          <div className="flex items-center justify-between">
+            <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-grey-3">Site audit</span>
+            <span className="flex items-center gap-1 text-[9px] font-medium text-mint">
+              <svg width="8" height="8" viewBox="0 0 16 16" fill="none">
+                <path d="M3.5 8.5l3 3 6-7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              PASSED
             </span>
+          </div>
+          {scores.map((s) => (
+            <div key={s.label} className="flex items-center gap-2.5">
+              <span className="w-[92px] shrink-0 leading-tight">
+                <span className="block text-[9.5px] font-semibold text-white">{s.label}</span>
+                <span className="block text-[8.5px] text-grey-3">{s.sub}</span>
+              </span>
+              <span className="relative h-[3px] flex-1 overflow-hidden rounded-full bg-white/[0.08]">
+                <span
+                  className="vg-meter absolute inset-y-0 left-0 rounded-full"
+                  style={{ width: `${s.value}%`, background: "var(--grad-brand-soft)", ["--vd" as string]: s.delay }}
+                />
+              </span>
+              <span className="w-7 shrink-0 text-right text-[10px] font-bold tabular-nums text-mint">{s.value}</span>
+            </div>
           ))}
         </div>
       </div>
@@ -605,7 +595,7 @@ export function AnalyticsVignette() {
             <Image src="/x-mark.png" alt="" aria-hidden width={166} height={196} className="h-2.5 w-auto" />
           </span>
           <span className="rounded-lg rounded-bl-sm bg-volt/12 px-2.5 py-1.5 text-[11px] font-medium text-volt">
-            Instagram grew the fastest, up 34% this month.
+            Instagram grew the fastest. It's up 34% this month.
           </span>
         </div>
       </div>

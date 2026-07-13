@@ -9,6 +9,18 @@ import { useInquiry } from "./InquiryContext";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
+function StepHeader({ n, title, hint }: { n: string; title: string; hint?: string }) {
+  return (
+    <div className="mb-4 flex items-baseline gap-3">
+      <span className="mono flex h-6 w-6 shrink-0 translate-y-0.5 items-center justify-center rounded-[6px] border border-volt/40 bg-volt/[0.07] text-[11px] text-volt">
+        {n}
+      </span>
+      <span className="text-[15px] font-semibold text-white">{title}</span>
+      {hint && <span className="hidden text-[12px] text-grey-3 sm:inline">{hint}</span>}
+    </div>
+  );
+}
+
 /**
  * Single "build your package" flow: pick services, budget, timeline, then add
  * your details and send. This replaces a separate contact form so the service
@@ -77,7 +89,8 @@ export default function PackageBuilder() {
         </Reveal>
 
         <Reveal delay={1} className="mt-12">
-          <form onSubmit={handleSubmit} className="panel p-6 sm:p-10" noValidate>
+          <form onSubmit={handleSubmit} className="panel p-5 sm:p-10" noValidate>
+            <div className="relative">
             {status === "success" ? (
               <div className="flex flex-col items-center py-16 text-center">
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-volt text-black">
@@ -96,7 +109,7 @@ export default function PackageBuilder() {
             ) : (
               <>
                 {/* 01 services */}
-                <p className="eyebrow mb-4">01 · What do you need</p>
+                <StepHeader n="01" title="What do you need?" hint="Pick as many as you like" />
                 <div className="flex flex-wrap gap-2.5">
                   {SERVICES.map((s) => {
                     const active = services.includes(s.id);
@@ -124,7 +137,7 @@ export default function PackageBuilder() {
                 {/* 02 / 03 budget + timeline */}
                 <div className="mt-8 grid gap-8 sm:grid-cols-2">
                   <div>
-                    <p className="eyebrow mb-4">02 · Budget</p>
+                    <StepHeader n="02" title="Budget" />
                     <div className="flex flex-wrap gap-2.5">
                       {BUDGETS.map((b) => (
                         <button key={b} type="button" className="chip" data-active={budget === b} aria-pressed={budget === b} onClick={() => setBudget(b)}>
@@ -134,7 +147,7 @@ export default function PackageBuilder() {
                     </div>
                   </div>
                   <div>
-                    <p className="eyebrow mb-4">03 · Timeline</p>
+                    <StepHeader n="03" title="Timeline" />
                     <div className="flex flex-wrap gap-2.5">
                       {TIMELINES.map((t) => (
                         <button key={t} type="button" className="chip" data-active={timeline === t} aria-pressed={timeline === t} onClick={() => setTimeline(t)}>
@@ -146,19 +159,29 @@ export default function PackageBuilder() {
                 </div>
 
                 {/* 04 details */}
-                <div className="mt-9 border-t border-line pt-8">
-                  <p className="eyebrow mb-4">04 · Your details</p>
+                <div className="mt-9 border-t border-white/[0.08] pt-8">
+                  <StepHeader n="04" title="Your Details" />
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <input name="name" className="field" placeholder="Your name" autoComplete="name" aria-label="Name" />
-                    <input name="email" type="email" className="field" placeholder="you@company.com" autoComplete="email" aria-label="Work email" />
+                    <label className="block">
+                      <span className="mono mb-1.5 block text-[11px] uppercase tracking-[0.12em] text-grey-3">Name</span>
+                      <input name="name" className="field" placeholder="Your name" autoComplete="name" />
+                    </label>
+                    <label className="block">
+                      <span className="mono mb-1.5 block text-[11px] uppercase tracking-[0.12em] text-grey-3">Email</span>
+                      <input name="email" type="email" className="field" placeholder="you@company.com" autoComplete="email" />
+                    </label>
                   </div>
-                  <textarea
-                    name="message"
-                    rows={3}
-                    className="field mt-4 resize-none"
-                    placeholder="What's slowing you down? e.g. We answer the same 20 questions in the inbox every day."
-                    aria-label="What's slowing you down"
-                  />
+                  <label className="mt-4 block">
+                    <span className="mono mb-1.5 block text-[11px] uppercase tracking-[0.12em] text-grey-3">
+                      What&apos;s slowing you down?
+                    </span>
+                    <textarea
+                      name="message"
+                      rows={3}
+                      className="field resize-none"
+                      placeholder="e.g. We answer the same 20 questions in the inbox every day."
+                    />
+                  </label>
                   <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden className="absolute left-[-9999px] h-0 w-0 opacity-0" />
                 </div>
 
@@ -168,13 +191,23 @@ export default function PackageBuilder() {
                   </p>
                 )}
 
-                <div className="mt-7 flex flex-col items-center justify-between gap-4 sm:flex-row">
-                  <p className="mono text-[13px] text-grey">
-                    <span className="text-volt">{services.length}</span> selected
-                    {budget ? ` · ${budget}` : ""}
-                    {timeline ? ` · ${timeline}` : ""}
+                {/* live receipt: the package assembling as you pick */}
+                <div className="mt-8 flex flex-col gap-4 rounded-xl border border-white/10 bg-black/30 p-4 sm:flex-row sm:items-center sm:justify-between sm:pl-5">
+                  <p className="mono min-w-0 text-[12.5px] leading-relaxed text-grey">
+                    <span className="text-grey-3">Your Package: </span>
+                    {selectedTitles.length > 0 ? (
+                      <span className="text-volt">{selectedTitles.join(" + ")}</span>
+                    ) : (
+                      <span>You haven't picked anything yet.</span>
+                    )}
+                    {budget && <span className="text-grey-2"> · {budget}</span>}
+                    {timeline && <span className="text-grey-2"> · {timeline}</span>}
                   </p>
-                  <button type="submit" disabled={status === "submitting"} className="cta cta-primary w-full justify-center disabled:opacity-70 sm:w-auto">
+                  <button
+                    type="submit"
+                    disabled={status === "submitting"}
+                    className="cta cta-primary w-full shrink-0 justify-center disabled:opacity-70 sm:w-auto"
+                  >
                     <BlueprintCorners />
                     <span>{status === "submitting" ? "Sending" : "Send my package"}</span>
                     <span className="cta-arrow" aria-hidden>
@@ -186,6 +219,7 @@ export default function PackageBuilder() {
                 </div>
               </>
             )}
+            </div>
           </form>
         </Reveal>
       </div>
