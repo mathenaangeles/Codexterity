@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import { SITE_URL } from "../../lib/site";
+import { SITE_URL, SITE_HOST } from "../../lib/site";
 
 // nodemailer needs the Node runtime (not edge). Vercel Hobby runs this for free.
 export const runtime = "nodejs";
@@ -190,7 +190,7 @@ export async function POST(req: Request) {
                     </tr></table>
                   </td>
                   <td align="right" style="vertical-align:middle;">
-                    <a href="${SITE}" style="font-family:${MONO};color:#86868b;font-size:11.5px;text-decoration:none;">codexterity.ai</a>
+                    <a href="${SITE}" style="font-family:${MONO};color:#86868b;font-size:11.5px;text-decoration:none;">${SITE_HOST}</a>
                   </td>
                 </tr></table>
               </td></tr>

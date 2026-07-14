@@ -36,7 +36,7 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Codexterity | AI Automation, Chatbots & Websites for Small Teams",
+    default: "Codexterity | AI Workforce",
     template: "%s | Codexterity",
   },
   description:
@@ -68,11 +68,9 @@ export const metadata: Metadata = {
       "We build the chatbot that answers your leads at 2am, so you don't have to.",
   },
   icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/logo-mark.png", type: "image/png" },
-    ],
-    apple: "/logo-mark.png",
+    // the standalone X mark, never the clipped wordmark
+    icon: [{ url: "/x-mark.png", type: "image/png" }],
+    apple: "/x-mark.png",
   },
 };
 
@@ -82,7 +80,7 @@ const jsonLd = {
   "@type": "ProfessionalService",
   name: "Codexterity",
   url: SITE_URL,
-  logo: `${SITE_URL}/logo-mark.png`,
+  logo: `${SITE_URL}/logo.png`,
   email: "codexterityai@gmail.com",
   description:
     "AI automation studio for small teams: chatbots, workflow automation, CRM and lead systems, dashboards, and conversion-focused websites.",
