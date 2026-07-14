@@ -1,10 +1,18 @@
 import Image from "next/image";
+import { siFacebook, siInstagram, siYoutube, siTiktok } from "simple-icons";
 import Button from "./Button";
 
 const nav = [
   { name: "Services", href: "#services" },
   { name: "Process", href: "#process" },
   { name: "Results", href: "#results" },
+];
+
+const socials = [
+  { name: "Facebook", href: "https://www.facebook.com/codexterityai", icon: siFacebook },
+  { name: "Instagram", href: "https://www.instagram.com/codexterityai/", icon: siInstagram },
+  { name: "YouTube", href: "https://www.youtube.com/@codexterityai", icon: siYoutube },
+  { name: "TikTok", href: "https://www.tiktok.com/@codexterityai?_r=1&_t=ZS-982H79lXDvB", icon: siTiktok },
 ];
 
 export default function Footer() {
@@ -77,8 +85,25 @@ export default function Footer() {
           <Button href="#package">Start a project</Button>
         </div>
 
-        <div className="mt-12 border-t border-white/10 pt-6">
+        <div className="mt-12 flex flex-col-reverse items-start gap-6 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[13px] text-grey-3">© {new Date().getFullYear()} Codexterity</p>
+          <div className="flex items-center gap-2.5">
+            {socials.map((s) => (
+              <a
+                key={s.name}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={s.name}
+                title={s.name}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-grey-2 transition-all duration-300 hover:-translate-y-0.5 hover:border-volt/50 hover:text-volt"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden className="h-[15px] w-[15px] fill-current">
+                  <path d={s.icon.path} />
+                </svg>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>

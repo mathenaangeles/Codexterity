@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     ? { google: process.env.GOOGLE_SITE_VERIFICATION }
     : undefined,
   openGraph: {
-    title: "Codexterity | We automate the work you keep doing by hand",
+    title: "Codexterity | We make your business run smarter with AI.",
     description:
       "AI automation, conversion-focused websites, and custom systems for small teams. Practical AI and real systems, not abstract hype.",
     url: SITE_URL,
