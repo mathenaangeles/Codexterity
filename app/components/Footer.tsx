@@ -39,10 +39,10 @@ export default function Footer() {
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-3.5">
               <a
-                href="mailto:hello@codexterity.ai"
+                href="mailto:codexterityai@gmail.com"
                 className="mono text-[13px] text-grey-2 transition-colors hover:text-aqua"
               >
-                hello@codexterity.ai
+                codexterityai@gmail.com
               </a>
               <span className="h-3.5 w-px bg-white/15" aria-hidden />
               <span className="mono inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.15em] text-grey-2">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Sora, Inter, JetBrains_Mono } from "next/font/google";
 
 import "./globals.css";
+import { SITE_URL } from "./lib/site";
 import { SERVICES } from "./lib/data";
 import Backdrop from "./components/Backdrop";
 import CustomCursor from "./components/CustomCursor";
@@ -31,8 +32,6 @@ const jetbrains = JetBrains_Mono({
   variable: "--font-mono-jb",
   display: "swap",
 });
-
-const SITE_URL = "https://codexterity.ai";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -84,7 +83,7 @@ const jsonLd = {
   name: "Codexterity",
   url: SITE_URL,
   logo: `${SITE_URL}/logo-mark.png`,
-  email: "hello@codexterity.ai",
+  email: "codexterityai@gmail.com",
   description:
     "AI automation studio for small teams: chatbots, workflow automation, CRM and lead systems, dashboards, and conversion-focused websites.",
   makesOffer: SERVICES.map((s) => ({

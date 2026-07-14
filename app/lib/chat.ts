@@ -12,7 +12,7 @@ export type ChatNode = {
 };
 
 export const CHAT_INTRO =
-  "Oh, you found the talk button. I'm the site, and I answer fast. Pick a question below.";
+  "How can we help you today? Choose a question below to get started. ";
 
 export const CHAT_ROOT_OPTIONS: ChatOption[] = [
   { label: "What do you build?", to: "build" },
@@ -26,49 +26,49 @@ export const CHAT_NODES: Record<string, ChatNode> = {
   build: {
     id: "build",
     answer: [
-      "Three things, all shipped to production:",
-      "**AI chatbots and agents** that answer your customers and work your docs.",
-      "**Automations and systems**: CRM, dashboards, lead routing, integrations.",
-      "**Websites** built to rank and convert.",
+      "We build custom AI solutions tailored to the way your business works, including:",
+      "**AI agents and chatbots** that answer customers, automate support, and complete repetitive tasks.",
+      "**Business automations** that connect your CRM, ERP, databases, APIs, and other software into seamless workflows.",
+      "**Websites and applications** designed to generate leads, streamline operations, and help your business grow.",
     ],
     options: [
       { label: "How fast can you ship?", to: "speed" },
-      { label: "Show me what it looks like", href: "#services" },
-      { label: "Build my package", href: "#package" },
+      { label: "Show me what it looks like,", href: "#services" },
+      { label: "Build my package,", href: "#package" },
     ],
   },
   pricing: {
     id: "pricing",
     answer: [
-      "Simple, and told to your face:",
-      "**Fixed price** for scoped projects. **Retainer** for ongoing work. **Advisory** when you need a brain, not a build.",
-      "You get a scope within one business day of a short call. No surprise invoices.",
+      "Our pricing is designed to match the way you work.",
+      "Whether you need a one-time project team, an ongoing AI partner, or strategic consultant, we'll recommend the **engagement model** that best fits your business.",
+      "You'll receive a **tailored proposal** with a recommended scope, timeline, and estimated investment.",
     ],
     options: [
       { label: "How fast can you ship?", to: "speed" },
-      { label: "Build my package", href: "#package" },
+      { label: "Build my package.", href: "#package" },
     ],
   },
   speed: {
     id: "speed",
     answer: [
-      "Fast, because we ship working software instead of decks.",
-      "A first working system usually lands in **1 to 3 weeks**. You see progress live, not at the end.",
+      "Most projects reach a first working release within **1 to 3 weeks** depending on complexity.",
+      "We prioritize getting a usable solution into your hands early, then refine and expand it through rapid iterations."
     ],
     options: [
       { label: "Do I own it?", to: "ownership" },
-      { label: "Build my package", href: "#package" },
+      { label: "Build my package.", href: "#package" },
     ],
   },
   ownership: {
     id: "ownership",
     answer: [
-      "Completely. Clear handoff, plain-language docs, and no lock-in.",
-      "You do not need an in-house engineering team to keep it running. It's yours to keep.",
+      "**Completely**. We provide a clear handoff, plain-language documentation, and no lock-in.",
+      "You do not need an in-house engineering team to keep it running.",
     ],
     options: [
       { label: "How much does it cost?", to: "pricing" },
-      { label: "Build my package", href: "#package" },
+      { label: "Build my package.", href: "#package" },
     ],
   },
 };

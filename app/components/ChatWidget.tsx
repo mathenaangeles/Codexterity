@@ -110,7 +110,7 @@ export default function ChatWidget() {
             <span style={{ ["--ex" as string]: "6px", ["--ey" as string]: "20px", ["--ed" as string]: "1.2s" }} />
           </span>
         </span>
-        <span className="mono text-[12px] font-medium text-white">{open ? "Close" : "Ask us anything"}</span>
+        <span className="mono text-[12px] font-medium text-white">{open ? "Close" : "Let's Talk"}</span>
       </button>
 
       {/* panel */}
@@ -119,7 +119,7 @@ export default function ChatWidget() {
           open ? "pointer-events-auto translate-y-0 scale-100 opacity-100" : "pointer-events-none translate-y-3 scale-[0.96] opacity-0"
         }`}
         role="dialog"
-        aria-label="Codexterity live session"
+        aria-label="Codexterity"
       >
         <div
           className="flex max-h-[70vh] flex-col overflow-hidden rounded-[18px] border border-volt/35 bg-[#0b0b0d]/95 backdrop-blur-xl"
@@ -129,7 +129,7 @@ export default function ChatWidget() {
           <div className="flex items-center justify-between border-b border-line px-4 py-3">
             <div className="mono flex items-center gap-2.5 text-[12px] tracking-[0.14em] text-volt">
               <XMark size={13} />
-              CODEXTERITY LIVE SESSION
+              CODEXTERITY
             </div>
             <button
               type="button"

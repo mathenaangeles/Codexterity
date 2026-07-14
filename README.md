@@ -41,7 +41,7 @@ Copy `.env.example` to `.env.local` for local dev, and set the same variables in
 
 ```
 SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS
-INQUIRY_TO   (default: hello@codexterity.ai)
+INQUIRY_TO   (default: codexterityai@gmail.com)
 INQUIRY_FROM
 ```
 

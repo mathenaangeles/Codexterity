@@ -42,7 +42,7 @@ export default function Results() {
       <div className="relative z-10 mx-auto max-w-[1240px] px-5 sm:px-8">
         <Reveal>
           <span className="eyebrow eyebrow-line">Proof it works</span>
-          <h2 className="mt-5 max-w-[24ch] font-display text-[clamp(2rem,4.5vw,3.4rem)] text-white">
+          <h2 className="mt-5 max-w-[24ch] font-display text-[clamp(2rem,4.5vw,3.4rem)] leading-[1.1] text-white">
             <RevealText>Every decision is driven by business impact.</RevealText>
           </h2>
         </Reveal>

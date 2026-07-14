@@ -10,23 +10,23 @@ type Step = {
 const steps: Step[] = [
   {
     no: "01",
-    title: "Map the manual work",
-    body: "We sit inside your real workflow and name every task still done by hand.",
+    title: "Discover the opportunity",
+    body: "We learn how your business works today, identify repetitive processes, and uncover the opportunities where we can create the greatest impact.",
   },
   {
     no: "02",
     title: "Build the system",
-    body: "Working software wired into the tools you already run. Not a slide deck.",
+    body: "We design, develop, and integrate a custom solution that fits seamlessly into the software and workflows you already use.",
   },
   {
     no: "03",
-    title: "Automate & measure",
-    body: "It goes live, and we watch the numbers: hours saved, leads captured, tickets closed.",
+    title: "Launch and optimize",
+    body: "Once your solution is live, we monitor performance, measure business outcomes, and refine it based on the results.",
   },
   {
     no: "04",
     title: "Hand it over",
-    body: "Plain docs, full ownership, no lock-in. Yours to keep.",
+    body: "You receive complete documentation and take full ownership of the solution, giving your team the confidence to manage it independently.",
   },
 ];
 
@@ -38,8 +38,8 @@ export default function Process() {
       <div className="relative z-10 mx-auto max-w-[1160px] px-5 sm:px-6">
         <Reveal>
           <span className="eyebrow eyebrow-line">How it works</span>
-          <h2 className="mt-5 font-display text-[clamp(2rem,4.5vw,3.4rem)] text-white">
-            <RevealText>From manual to managed<br />in four moves.</RevealText>
+          <h2 className="mt-5 font-display text-[clamp(2rem,4.5vw,3.4rem)] leading-[1.1] text-white">
+            <RevealText>Move from manual to managed<br />in four moves.</RevealText>
           </h2>
         </Reveal>
 

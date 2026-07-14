@@ -162,8 +162,8 @@ function FullScreenMenu({
               <Button href="#package">Start a project</Button>
             </span>
             <div className="flex flex-col gap-2 sm:items-end">
-              <a href="mailto:hello@codexterity.ai" className="mono text-[13px] text-grey-2 transition-colors hover:text-aqua">
-                hello@codexterity.ai
+              <a href="mailto:codexterityai@gmail.com" className="mono text-[13px] text-grey-2 transition-colors hover:text-aqua">
+                codexterityai@gmail.com
               </a>
               <span className="mono inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.15em] text-grey-2">
                 <span className="relative flex h-1.5 w-1.5">

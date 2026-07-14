@@ -18,7 +18,8 @@
       "Bash('/Applications/Brave Browser.app/Contents/MacOS/Brave Browser' --headless --disable-gpu --hide-scrollbars --force-device-scale-factor=2 --virtual-time-budget=2500 --window-size=1100,1560 --screenshot=/private/tmp/claude-501/-Users-mathena-Documents-GitHub-Codexterity/26800475-31e9-4595-9fee-b00e6a81416f/scratchpad/vig3.png http://localhost:3116/vigtest)",
       "Bash(awk 'NR>=826 && NR<=1000' app/globals.css)",
       "Bash(grep -nA2 \"^\\\\.paper-panel {\" app/globals.css)",
-      "Bash(grep -nA2 \"^\\\\.tool-cell {\" app/globals.css)"
+      "Bash(grep -nA2 \"^\\\\.tool-cell {\" app/globals.css)",
+      "Bash('/Applications/Brave Browser.app/Contents/MacOS/Brave Browser' --headless --disable-gpu --hide-scrollbars --force-prefers-reduced-motion --force-device-scale-factor=2 --virtual-time-budget=3500 --window-size=1200,7600 --screenshot=/private/tmp/claude-501/-Users-mathena-Documents-GitHub-Codexterity/26800475-31e9-4595-9fee-b00e6a81416f/scratchpad/fullp.png http://localhost:3119)"
     ]
   }
 }

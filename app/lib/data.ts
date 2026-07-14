@@ -73,7 +73,7 @@ export const SERVICES: Service[] = [
   },
 ];
 
-export const BUDGETS = ["< $2k", "$2k–$5k", "$5k–$15k", "$15k+", "Not sure yet"] as const;
+export const BUDGETS = ["< $2k", "$2k–$5k", "$5k–$15k", "$15k+", "Uncertain"] as const;
 export const TIMELINES = ["ASAP", "2–4 weeks", "1–3 months", "Exploring"] as const;
 
 export type Budget = (typeof BUDGETS)[number];

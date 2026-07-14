@@ -1111,3 +1111,35 @@ a:hover.roll .roll-inner {
   .vg-check { background: var(--color-volt) !important; border-color: var(--color-volt) !important; }
   .vg-check svg { opacity: 1 !important; transform: none !important; }
 }
+
+/* fade the active service demo in when it (re)mounts */
+@keyframes vg-swap-in { from { opacity: 0; } to { opacity: 1; } }
+.vg-swap { animation: vg-swap-in 0.3s var(--ease); }
+
+/* CTA in a submitting/disabled state: unmistakably NOT clickable — dimmed,
+   desaturated, no hover lift, no sheen, not-allowed cursor. */
+.cta:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  filter: saturate(0.55);
+}
+.cta:disabled:hover {
+  transform: none;
+}
+.cta-primary:disabled,
+.cta-primary:disabled:hover {
+  box-shadow: none;
+}
+.cta:disabled::before {
+  display: none;
+}
+
+/* success badge pop-in (instant under reduced-motion via the global rule) */
+@keyframes success-pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.success-pop {
+  animation: success-pop 0.5s var(--ease) both;
+}

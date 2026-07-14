@@ -67,7 +67,7 @@ export default function Proof() {
       <div className="relative z-10 mx-auto max-w-[1160px] px-5 sm:px-6">
         <Reveal className="max-w-[60ch]">
           <span className="eyebrow eyebrow-line">Built on your stack</span>
-          <h2 className="mt-5 font-display text-[clamp(1.9rem,4vw,3rem)] text-white">
+          <h2 className="mt-5 font-display text-[clamp(1.9rem,4vw,3rem)] leading-[1.1] text-white">
             <RevealText>We integrate with the tools you already use.</RevealText>
           </h2>
           <p className="mt-5 max-w-[52ch] text-[16px] leading-relaxed text-grey-2">

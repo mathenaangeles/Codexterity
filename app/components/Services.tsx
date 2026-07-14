@@ -72,8 +72,8 @@ export default function Services() {
       <div className="relative z-10 mx-auto max-w-[1240px] px-5 sm:px-8">
         <Reveal>
           <span className="eyebrow eyebrow-line">What we build</span>
-          <h2 className="mt-5 max-w-[16ch] font-display text-[clamp(2rem,4.5vw,3.4rem)] text-white">
-            <RevealText>6 ways to get your time back.</RevealText>
+          <h2 className="mt-5 max-w-[16ch] font-display text-[clamp(2rem,4.5vw,3.4rem)] leading-[1.1] text-white">
+            <RevealText>Get your time back with intelligent automation.</RevealText>
           </h2>
         </Reveal>
 
@@ -128,20 +128,15 @@ export default function Services() {
           <Reveal delay={1} className="lg:sticky lg:top-24 lg:self-start">
             <div className="panel overflow-hidden">
               <div className="relative aspect-[4/3] max-h-[440px] w-full">
-                {SERVICES.map((s, i) => {
-                  const demo = DEMOS[s.id];
-                  return (
-                    <div
-                      key={s.id}
-                      className={`absolute inset-0 transition-opacity duration-300 ${active === i ? "opacity-100" : "pointer-events-none opacity-0"}`}
-                      aria-hidden={active !== i}
-                    >
-                      <Frame label={s.title} accent={demo.accent}>
-                        {demo.vignette}
-                      </Frame>
-                    </div>
-                  );
-                })}
+                {/* Only the active vignette is mounted, keyed to `active`, so
+                   selecting a service restarts its sequence from the top instead
+                   of catching a looping animation mid-cycle (which made CTAs like
+                   "Book a call" appear pre-highlighted). */}
+                <div key={active} className="vg-swap absolute inset-0">
+                  <Frame label={SERVICES[active].title} accent={DEMOS[SERVICES[active].id].accent}>
+                    {DEMOS[SERVICES[active].id].vignette}
+                  </Frame>
+                </div>
               </div>
               <div className="border-t border-line p-5">
                 <p className="text-[15px] leading-relaxed text-grey-2">{DEMOS[SERVICES[active].id].outcome}</p>
@@ -156,7 +151,7 @@ export default function Services() {
           <div className="relative z-10 flex flex-col justify-between gap-6 p-7 sm:flex-row sm:items-center sm:p-8">
             <div>
               <span className="eyebrow text-volt">Something else?</span>
-              <h3 className="mt-3 max-w-[28ch] font-display text-[clamp(1.4rem,2.4vw,2rem)] text-white">
+              <h3 className="mt-3 max-w-[28ch] font-display text-[clamp(1.4rem,2.4vw,2rem)] leading-[1.15] text-white">
                 If you do it more than twice a week, it can probably run itself.
               </h3>
             </div>
