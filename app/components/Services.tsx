@@ -127,7 +127,8 @@ export default function Services() {
           {/* live demo panel */}
           <Reveal delay={1} className="lg:sticky lg:top-24 lg:self-start">
             <div className="panel overflow-hidden">
-              <div className="relative aspect-[4/3] max-h-[440px] w-full">
+              {/* taller on phones so the mini-app content never clips */}
+              <div className="relative aspect-[5/6] max-h-[440px] w-full sm:aspect-[4/3]">
                 {/* Only the active vignette is mounted, keyed to `active`, so
                    selecting a service restarts its sequence from the top instead
                    of catching a looping animation mid-cycle (which made CTAs like

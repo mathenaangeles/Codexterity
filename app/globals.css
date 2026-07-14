@@ -557,6 +557,13 @@
   z-index: 9999;
   border-radius: 9999px;
   mix-blend-mode: difference;
+  /* hidden until the fine-pointer script opts in — otherwise touch devices
+     show both frozen in the top-left corner */
+  display: none;
+}
+html.has-custom-cursor .cursor-dot,
+html.has-custom-cursor .cursor-ring {
+  display: block;
 }
 .cursor-dot {
   width: 7px;
