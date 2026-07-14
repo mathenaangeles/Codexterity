@@ -2,5 +2,10 @@
   command = "npm run build"
   publish = ".next"
 
+[build.environment]
+  # This token is intentionally emitted as a public Google verification meta
+  # tag. Exclude only this key; SMTP credentials remain covered by scanning.
+  SECRETS_SCAN_OMIT_KEYS = "GOOGLE_SITE_VERIFICATION"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
