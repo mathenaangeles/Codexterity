@@ -94,8 +94,11 @@ export default function Proof() {
                     title={tool.title}
                   >
                     {/* icon + label stay centered as one group; the label
-                       expands on hover so the icon never hits the top edge */}
-                    <span className="relative z-[3] flex flex-col items-center transition-transform duration-300 group-hover:-translate-y-1">
+                       expands on hover so the icon never hits the top edge.
+                       z-[8] keeps them ABOVE the grain plies (z-6): iOS Safari
+                       can fail mix-blend-mode and paint the grain as opaque
+                       fog, which was hiding the logos on phones. */}
+                    <span className="relative z-[8] flex flex-col items-center transition-transform duration-300 group-hover:-translate-y-1">
                       <svg viewBox="0 0 24 24" role="img" aria-label={tool.title} className="h-6 w-6 sm:h-8 sm:w-8">
                         <path d={tool.path} />
                       </svg>

@@ -9,6 +9,7 @@ import CustomCursor from "./components/CustomCursor";
 import SmoothScroll from "./components/SmoothScroll";
 import ScrollProgress from "./components/ScrollProgress";
 import ScrollFX from "./components/ScrollFX";
+import Preloader from "./components/Preloader";
 
 // Garet is a licensed commercial face; per the brand book, on-screen specimens
 // fall back to Sora where Garet isn't installed.
@@ -127,6 +128,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <Preloader />
         <SmoothScroll />
         <ScrollProgress />
         <ScrollFX />

@@ -982,6 +982,9 @@ a:hover.roll .roll-inner {
    intersection. Logos rest light grey and turn cobalt / aqua on hover. */
 .paper-panel {
   position: relative;
+  /* force a stacking/blending context so Safari composites the grain plies
+     against THIS surface, not the page backdrop */
+  isolation: isolate;
   /* the exact .panel surface the rest of the site uses, plus grain: the sheet
      is our material, only the blueprint framing makes it special */
   background: linear-gradient(180deg, #101013 0%, #0b0b0d 100%);
