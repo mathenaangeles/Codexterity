@@ -5,22 +5,45 @@ import Image from "next/image";
 
 /**
  * First-load boot screen: the X mark pulses while the wordmark wipes in with
- * real load progress (eased toward 92%, snapped to 100% when the window
- * finishes loading), then the whole sheet slides up and unmounts. Server-
- * rendered visible so there is no unstyled flash before hydration; instant
- * exit under prefers-reduced-motion; scroll locked while showing.
+ * load progress, then the sheet slides up and unmounts.
+ *
+ * Two engines, one look:
+ *  - Pure CSS (pre-hydration): the .preloader-shell animations fill the bar,
+ *    wipe the wordmark, and auto-dismiss the sheet after ~3.6s. On slow
+ *    mobile connections React arrives last, so the screen must never depend
+ *    on JS to leave.
+ *  - React (post-hydration): the effect below cancels the CSS fallback and
+ *    drives the same elements with real load progress (eased toward 90%,
+ *    snapped to 100% on window.load, hard-capped so it can't hang).
+ *
+ * Server-rendered visible so there is no unstyled flash; reduced-motion
+ * users skip it both ways (the global reduce rule collapses the CSS
+ * animations to 0ms, and the effect unmounts immediately).
  */
 export default function Preloader() {
   const [progress, setProgress] = useState(0);
   const [exiting, setExiting] = useState(false);
   const [gone, setGone] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
   const started = useRef<number>(0);
+  const shellRef = useRef<HTMLDivElement>(null);
+  const fillRef = useRef<HTMLSpanElement>(null);
+  const wipeRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
+    // signal "React is alive": switches the CSS no-JS safety nets off
+    document.documentElement.classList.add("hydrated");
+
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setGone(true);
       return;
     }
+
+    // JS is alive: take over from the CSS fallback timeline.
+    shellRef.current?.style.setProperty("animation", "none");
+    fillRef.current?.style.setProperty("animation", "none");
+    wipeRef.current?.style.setProperty("animation", "none");
+    setHydrated(true);
 
     started.current = performance.now();
     document.body.style.overflow = "hidden";
@@ -83,9 +106,10 @@ export default function Preloader() {
 
   return (
     <div
+      ref={shellRef}
       aria-hidden
-      className="fixed inset-0 z-[80] flex items-center justify-center bg-[#050506] transition-transform duration-[800ms] ease-[cubic-bezier(0.16,0.84,0.28,1)]"
-      style={{ transform: exiting ? "translateY(-100%)" : "translateY(0)" }}
+      className="preloader-shell fixed inset-0 z-[80] flex items-center justify-center bg-[#050506] transition-transform duration-[800ms] ease-[cubic-bezier(0.16,0.84,0.28,1)]"
+      style={{ transform: exiting ? "translateY(-101%)" : undefined }}
     >
       {/* the same material as the site: graph grid + ambient glow */}
       <div className="section-grid section-grid-fade" aria-hidden />
@@ -102,8 +126,9 @@ export default function Preloader() {
         <span className="relative block w-full">
           <Image src="/logo.png" alt="" width={432} height={82} priority className="h-auto w-full opacity-[0.08]" />
           <span
-            className="absolute inset-0 block overflow-hidden"
-            style={{ clipPath: `inset(0 ${100 - progress}% 0 0)` }}
+            ref={wipeRef}
+            className="pre-wipe absolute inset-0 block overflow-hidden"
+            style={hydrated ? { clipPath: `inset(0 ${100 - progress}% 0 0)` } : undefined}
           >
             <Image src="/logo.png" alt="Codexterity" width={432} height={82} priority className="h-auto w-full" />
           </span>
@@ -112,14 +137,19 @@ export default function Preloader() {
         {/* gradient progress hairline (same language as the scroll bar) */}
         <span className="mt-7 block h-[2px] w-full overflow-hidden rounded-full bg-white/[0.07]">
           <span
-            className="block h-full origin-left rounded-full"
-            style={{ background: "var(--grad-brand)", transform: `scaleX(${progress / 100})` }}
+            ref={fillRef}
+            className="pre-fill block h-full origin-left rounded-full"
+            style={{
+              background: "var(--grad-brand)",
+              ...(hydrated ? { transform: `scaleX(${progress / 100})` } : null),
+            }}
           />
         </span>
 
         <span className="mono mt-4 flex w-full items-center justify-between text-[11px] tracking-[0.15em] text-grey">
           <span>BOOTING THE WORKFORCE</span>
-          <span className="tabular-nums text-volt">{pct}%</span>
+          {/* percent needs JS — before hydration it would sit frozen at 0% */}
+          <span className="tabular-nums text-volt">{hydrated ? `${pct}%` : ""}</span>
         </span>
       </div>
     </div>

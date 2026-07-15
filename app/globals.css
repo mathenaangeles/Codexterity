@@ -724,6 +724,48 @@ a:focus-visible .menu-rule {
   transform: scaleX(1);
 }
 
+/* ---------------------------------------------------------------- Preloader
+   No-JS safety net: on slow mobile connections React hydrates LAST, so the
+   boot screen must entertain and dismiss itself with pure CSS. The component
+   cancels these animations the moment it hydrates and drives the same
+   elements from JS instead. */
+@keyframes pre-exit {
+  to { transform: translateY(-101%); visibility: hidden; }
+}
+@keyframes pre-fill {
+  0% { transform: scaleX(0); }
+  60% { transform: scaleX(0.58); }
+  100% { transform: scaleX(0.92); }
+}
+@keyframes pre-wipe {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 8% 0 0); }
+}
+.preloader-shell {
+  /* block touch-scrolling the page behind it before JS can lock the body */
+  touch-action: none;
+  overscroll-behavior: contain;
+  animation: pre-exit 0.85s var(--ease) 3.6s forwards;
+}
+
+/* Until React hydrates (html.hydrated is set by the Preloader effect), all
+   scroll-reveal content auto-reveals just after the CSS boot screen leaves —
+   a slow phone must never stare at an invisible page. Once hydrated, these
+   rules stop matching and the IntersectionObserver reveals take over. */
+@keyframes reveal-auto {
+  to { opacity: 1; transform: none; }
+}
+html:not(.hydrated) .reveal,
+html:not(.hydrated) .rw-word {
+  animation: reveal-auto 0.7s var(--ease) 4.2s forwards;
+}
+.preloader-shell .pre-fill {
+  animation: pre-fill 3.3s var(--ease) 0.15s both;
+}
+.preloader-shell .pre-wipe {
+  animation: pre-wipe 3.3s var(--ease) 0.15s both;
+}
+
 /* Chat launcher: volt sparks emit from the X mark while hovered */
 @keyframes chat-emit {
   0% { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
