@@ -39,17 +39,32 @@ export default function Preloader() {
       return;
     }
 
-    // JS is alive: take over from the CSS fallback timeline.
+    // performance.now() counts from navigation start, so this is how long the
+    // CSS fallback has already been running before React arrived.
+    const elapsed = performance.now();
+
+    // LATE HYDRATION (slow connection): the CSS timeline has already started
+    // its exit (3.6s) or finished it (~4.45s). Do NOT restart the boot screen
+    // and do NOT touch body scroll — the page is (or is about to be) usable.
+    // Just wait out whatever remains of the CSS exit and unmount.
+    if (elapsed > 3400) {
+      const t = setTimeout(() => setGone(true), Math.max(0, 4550 - elapsed) + 120);
+      return () => clearTimeout(t);
+    }
+
+    // NORMAL HYDRATION: take over from the CSS fallback timeline, picking the
+    // bar up roughly where CSS left it so nothing snaps backwards.
     shellRef.current?.style.setProperty("animation", "none");
     fillRef.current?.style.setProperty("animation", "none");
     wipeRef.current?.style.setProperty("animation", "none");
     setHydrated(true);
 
-    started.current = performance.now();
+    started.current = 0; // minimum on-screen time counts from navigation, not hydration
     document.body.style.overflow = "hidden";
 
     let raf = 0;
-    let p = 0;
+    // seed from where the CSS fill visually is, so the bar never jumps back
+    let p = Math.min(88, (elapsed / 3450) * 92);
     let finished = false;
     let exitTimer: ReturnType<typeof setTimeout> | undefined;
     let goneTimer: ReturnType<typeof setTimeout> | undefined;
