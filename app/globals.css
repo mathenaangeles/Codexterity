@@ -1036,6 +1036,10 @@ a:hover.roll .roll-inner {
   fill: var(--lc);
 }
 .tool-cell .tool-name {
+  color: var(--color-grey-2);
+  transition: color 0.3s var(--ease);
+}
+.tool-cell:hover .tool-name {
   color: var(--lc);
 }
 /* Generic blueprint cell: translucent surface + "+" crosshair at its top-left

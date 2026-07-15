@@ -27,35 +27,49 @@ export default function Preloader() {
 
     let raf = 0;
     let p = 0;
-    let loaded = document.readyState === "complete";
-    const onLoad = () => {
-      loaded = true;
-    };
-    window.addEventListener("load", onLoad);
-
+    let finished = false;
     let exitTimer: ReturnType<typeof setTimeout> | undefined;
     let goneTimer: ReturnType<typeof setTimeout> | undefined;
+    let finishTimer: ReturnType<typeof setTimeout> | undefined;
+
+    // Exit is TIMER-driven (not tied to the rAF progress reaching a threshold),
+    // so the boot screen always leaves and unlocks scroll even if rAF is
+    // throttled or a resource hangs. The bar animation below is best-effort.
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      setProgress(100);
+      exitTimer = setTimeout(() => setExiting(true), 220);
+      goneTimer = setTimeout(() => {
+        setGone(true);
+        document.body.style.overflow = "";
+      }, 1050);
+    };
+
+    const scheduleFinish = () => {
+      if (finishTimer || finished) return;
+      const elapsed = performance.now() - started.current;
+      finishTimer = setTimeout(finish, Math.max(0, 1000 - elapsed) + 320); // keep a short minimum on-screen
+    };
+
+    const onLoad = () => scheduleFinish();
+    if (document.readyState === "complete") scheduleFinish();
+    else window.addEventListener("load", onLoad);
+    // Hard cap: never wait on `window.load` forever (slow mobile / hanging asset).
+    const maxTimer = setTimeout(scheduleFinish, 2600);
 
     const tick = () => {
-      const minShown = performance.now() - started.current > 1000;
-      const target = loaded && minShown ? 100 : 92;
-      p += (target - p) * (loaded ? 0.14 : 0.045);
-      setProgress(p);
-      if (p >= 99.4) {
-        setProgress(100);
-        exitTimer = setTimeout(() => setExiting(true), 200);
-        goneTimer = setTimeout(() => {
-          setGone(true);
-          document.body.style.overflow = "";
-        }, 1050);
-        return;
-      }
-      raf = requestAnimationFrame(tick);
+      const target = finishTimer || finished ? 100 : 90;
+      p += (target - p) * 0.08;
+      setProgress(Math.min(100, p));
+      if (!finished) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
 
     return () => {
       cancelAnimationFrame(raf);
+      clearTimeout(maxTimer);
+      clearTimeout(finishTimer);
       clearTimeout(exitTimer);
       clearTimeout(goneTimer);
       window.removeEventListener("load", onLoad);

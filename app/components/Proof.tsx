@@ -98,11 +98,11 @@ export default function Proof() {
                        z-[8] keeps them ABOVE the grain plies (z-6): iOS Safari
                        can fail mix-blend-mode and paint the grain as opaque
                        fog, which was hiding the logos on phones. */}
-                    <span className="relative z-[8] flex flex-col items-center transition-transform duration-300 group-hover:-translate-y-1">
-                      <svg viewBox="0 0 24 24" role="img" aria-label={tool.title} className="h-6 w-6 sm:h-8 sm:w-8">
+                    <span className="relative z-[8] flex flex-col items-center gap-2">
+                      <svg viewBox="0 0 24 24" role="img" aria-label={tool.title} className="h-6 w-6 sm:h-7 sm:w-7">
                         <path d={tool.path} />
                       </svg>
-                      <span className="tool-name pointer-events-none max-h-0 overflow-hidden text-[10px] font-medium leading-none tracking-wide opacity-0 transition-all duration-300 group-hover:mt-2 group-hover:max-h-4 group-hover:opacity-100 sm:text-[10.5px]">
+                      <span className="tool-name pointer-events-none text-center text-[10px] font-medium leading-none tracking-wide sm:text-[10.5px]">
                         {tool.title}
                       </span>
                     </span>
