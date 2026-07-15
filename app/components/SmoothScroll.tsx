@@ -14,6 +14,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 export default function SmoothScroll() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Never smooth-scroll on touch / small screens. Lenis driven off the GSAP
+    // ticker hijacks native touch scrolling on mobile (the page won't scroll),
+    // so we hand phones and tablets back their native momentum. ScrollTrigger
+    // and the progress bar both fall back to native scroll automatically.
+    if (window.matchMedia("(pointer: coarse), (max-width: 768px)").matches) return;
 
     gsap.registerPlugin(ScrollTrigger);
 
