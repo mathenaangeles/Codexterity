@@ -6,7 +6,7 @@ import Process from "./components/Process";
 import Results from "./components/Results";
 import PackageBuilder from "./components/PackageBuilder";
 import Footer from "./components/Footer";
-import ChatWidget from "./components/ChatWidget";
+import DeferredChat from "./components/DeferredChat";
 import { InquiryProvider } from "./components/InquiryContext";
 
 export default function Home() {
@@ -22,7 +22,7 @@ export default function Home() {
         <PackageBuilder />
       </main>
       <Footer />
-      <ChatWidget />
+      <DeferredChat />
     </InquiryProvider>
   );
 }

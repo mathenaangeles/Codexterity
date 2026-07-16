@@ -126,10 +126,15 @@ function FullScreenMenu({
               onClick={onClose}
               className="group relative flex items-center justify-between border-b border-white/10 px-1 py-4 sm:py-5"
               style={{
+                // longhand transition props only: mixing the `transition`
+                // shorthand with a changing `transitionDelay` makes React warn
+                // about conflicting style properties on rerender
                 transitionDelay: open ? `${120 + i * 55}ms` : "0ms",
                 transform: open ? "translateY(0)" : "translateY(22px)",
                 opacity: open ? 1 : 0,
-                transition: "transform 0.6s cubic-bezier(0.16,0.84,0.28,1), opacity 0.6s",
+                transitionProperty: "transform, opacity",
+                transitionDuration: "0.6s",
+                transitionTimingFunction: "cubic-bezier(0.16,0.84,0.28,1)",
               }}
             >
               <span className="menu-rule" aria-hidden />
@@ -155,7 +160,8 @@ function FullScreenMenu({
             style={{
               transitionDelay: open ? "420ms" : "0ms",
               opacity: open ? 1 : 0,
-              transition: "opacity 0.6s",
+              transitionProperty: "opacity",
+              transitionDuration: "0.6s",
             }}
           >
             <span onClick={onClose}>

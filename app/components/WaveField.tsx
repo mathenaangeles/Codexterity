@@ -53,13 +53,18 @@ export default function WaveField({ className = "" }: { className?: string }) {
     let hov = 0;
     let hovTarget = 0;
 
-    const COLS = 70;
-    const ROWS = 32;
+    // performance budget: phones get fewer dots at a lower resolution — the
+    // field reads identically at that size but costs a fraction of the paint
+    let COLS = 70;
+    let ROWS = 32;
     const INFLUENCE = 210; // px radius of the cursor disturbance
 
     const resize = () => {
       const r = canvas.getBoundingClientRect();
-      dpr = Math.min(2, window.devicePixelRatio || 1);
+      const small = r.width < 640;
+      COLS = small ? 42 : 70;
+      ROWS = small ? 22 : 32;
+      dpr = Math.min(small ? 1.25 : 2, window.devicePixelRatio || 1);
       w = r.width;
       h = r.height;
       canvas.width = Math.round(w * dpr);
